@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["mui-color-input"],
+  output: "standalone",
+  outputFileTracingRoot: path.join(__dirname, "../../"),
+  transpilePackages: ["mui-color-input", "@tipper/shared"],
   // Image configuration for Next.js Image component
 
   images: {

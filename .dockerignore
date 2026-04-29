@@ -1,0 +1,32 @@
+# Don't ship dev artifacts into the build context.
+# This dramatically speeds up `docker build` since the entire workspace
+# would otherwise be tar'd and shipped to the daemon.
+
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
+**/.cache
+**/*.log
+**/.DS_Store
+
+.git
+.github
+.vscode
+.idea
+.cursor
+
+# Local env files — never bake secrets into images
+**/.env
+**/.env.local
+**/.env.*.local
+
+# But keep example env files
+!**/.env.example
+!**/.env.*.example
+
+# Misc
+README.md
+*.md
+docker-compose*.yml
