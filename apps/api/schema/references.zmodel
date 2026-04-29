@@ -1,0 +1,90 @@
+import "entity/entity"
+import "entity_community/entity_community"
+import "user/user"
+import "user/visits"
+
+// ONBOARDING REFERENCES user
+model ReferencePersonas {
+    id                  String         @id @default(uuid())
+    icon_url            String?
+    persona_name        String         @unique
+    persona_description String
+
+    users               UserPersonas[]
+}
+
+model ReferenceValues {
+    id                String       @id @default(uuid())
+    value_name        String       @unique
+    value_description String
+
+    users             UserValues[]
+}
+
+model ReferenceInterests {
+    id                String          @id @default(uuid())
+    interest_name     String          @unique
+    interest_category String
+
+    users             UserInterests[]
+}
+
+// onboarding entity REFERENCES
+
+model ReferenceEntityArchetypes {
+    id                  String                 @id @default(uuid())
+    icon_url            String?
+    archetype_name      String                 @unique
+    archetype_description String
+
+    entities            EntityArchetypesEntries[]
+}
+
+model ReferenceEntityValues {
+    id                String              @id @default(uuid())
+    value_name        String              @unique
+    value_description String
+
+    entities          EntityValuesEntries[]
+}
+
+model ReferenceEntityInterests {
+    id                String                 @id @default(uuid())
+    interest_name     String                 @unique
+    interest_category String
+
+    entities          EntityInterestsEntries[]
+}
+
+// entity Business Type REFERENCES
+model ReferenceBusinessTypes {
+  id                   String   @id @default(uuid())
+  industry             String
+  industry_description String
+  business_type        String  @default("OTHER")
+
+
+  @@unique([industry, business_type])
+}
+
+// entity Vibes REFERENCES
+
+model ReferenceVibes {
+  id          String            @id @default(uuid())
+  name        String            @unique
+  description String?
+  category    String?
+  visits UserCommunityVisit[]
+
+
+  @@index([name])
+}
+
+model ReferenceFeels {
+  id     String @id @default(uuid())
+  name   String @unique   // "Inspired", "Anxious", "Welcomed", "Uneasy"
+  emoji  String?
+  description String?
+  visits UserCommunityVisit[]
+}
+

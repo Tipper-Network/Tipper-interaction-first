@@ -1,0 +1,110 @@
+import "entity_community"
+import "votes"
+import "../user/user"
+
+// Note: User relation for status history is added via "TicketStatusChanger" relation name
+
+enum TicketType {
+  FEATURE
+  COMPLAINT
+  SUGGESTION
+  EVENT_IDEA
+  IMPROVEMENT
+}
+
+enum TicketStatus {
+  PENDING_APPROVAL
+  IN_PROGRESS
+  OPEN
+  PLANNED
+  COMPLETED
+  CLOSED
+  REJECTED
+  DUPLICATE
+}
+
+// vote box id is unique because we only want to be able to vote on a feedback ticket once
+//Community Board
+model FeedbackTicket {
+  id String @id @default(uuid())
+  title String
+  description String
+
+  community_id String
+  community EntityCommunity @relation(fields: [community_id], references: [id])
+  
+  author_id String
+  author User @relation(fields: [author_id], references: [id])
+  
+  vote_box_id String @unique
+  vote_box VoteBox @relation(fields: [vote_box_id], references: [id])
+
+  status TicketStatus
+  type TicketType
+  
+  priority Int? // nullable for now
+isArchived Boolean @default(false)
+
+  // assigneeId String? // Who's working on it
+  // assignee User? @relation("TicketAssignee", fields: [assigneeId], references: [id])
+  
+  duplicateOf_id String? // Link to original if duplicate
+  duplicateOf FeedbackTicket? @relation("TicketDuplicates", fields: [duplicateOf_id], references: [id])
+  duplicates FeedbackTicket[] @relation("TicketDuplicates")
+  
+  // resolution String? // Outcome/notes when completed
+
+ // Optional: tags for categorization
+  // tags FeedbackTicketTag[]
+  
+  comments FeedbackComment[]
+  statusHistory FeedbackTicketStatusHistory[]
+
+  
+  // // Optional: attachments (media and stuff)
+  // feedback_attachments FeedbackTicketAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Audit trail for status changes - tracks who changed what and when
+model FeedbackTicketStatusHistory {
+  id String @id @default(uuid())
+  
+  ticket_id String
+  ticket FeedbackTicket @relation(fields: [ticket_id], references: [id], onDelete: Cascade)
+  
+  oldStatus TicketStatus? // null for initial creation
+  newStatus TicketStatus
+  
+  changedBy_id String
+  changedBy User @relation("TicketStatusChanger", fields: [changedBy_id], references: [id])
+  
+  note String? // Optional reason/comment for the change
+  
+  changedAt DateTime @default(now())
+  
+  @@index([ticket_id])
+  @@index([changedBy_id])
+}
+
+
+model FeedbackComment {
+  id String @id @default(uuid())
+  content String
+  
+  ticket_id String
+  ticket FeedbackTicket @relation(fields: [ticket_id], references: [id])
+
+  vote_box_id String @unique
+  vote_box VoteBox @relation(fields: [vote_box_id], references: [id])
+
+  author_id String
+  author User @relation(fields: [author_id], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+

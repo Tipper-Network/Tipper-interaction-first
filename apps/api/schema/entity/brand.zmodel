@@ -1,0 +1,15 @@
+import "entity"
+//entity brand 
+
+model Brand {
+  id        String   @id @default(cuid())
+  entity_id  String   @unique
+  entity    Entity   @relation(fields: [entity_id], references: [id])
+
+// remember that a json field is a configuration. which means its more rules as data instead of data itself.
+  colors    Json?    // shared brand colors
+  qrStyle   Json?    // QR-specific overrides
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

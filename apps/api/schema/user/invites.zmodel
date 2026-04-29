@@ -1,0 +1,66 @@
+import "user"
+import "membership"
+import "../entity_community/entity_community"
+
+enum InviteStatus {
+  PENDING
+  REGISTERED
+  JOINED
+}
+enum UserInviteSource {
+    QR
+    EMAIL
+    SMS
+    WHATSAPP
+    TELEGRAM
+    OTHER
+}
+model UserInviteToken {
+  id String @id @default(uuid())
+
+  user_id String @unique
+  user User @relation(fields: [user_id], references: [id])
+
+  token String @unique
+
+  invites UserInvite[]
+
+  created_at DateTime @default(now())
+  is_active Boolean @default(true)
+
+  @@index([user_id])
+}
+model UserInvite {
+  id String @id @default(uuid())
+
+  token_id String
+  token UserInviteToken @relation(fields: [token_id], references: [id])
+
+/// userId thats invited to Tipper through the community or other things.
+  invited_user_id String
+  invited_user User @relation("InvitedUser", fields: [invited_user_id], references: [id])
+
+  
+  root_inviter_user_id String
+  root_inviter_user User @relation("RootInviter", fields: [root_inviter_user_id], references: [id])
+
+  status InviteStatus @default(PENDING)
+
+  scanned_at DateTime?
+  created_at DateTime @default(now())
+
+  entity_community_invite EntityCommunityInvite?
+  source UserInviteSource
+  @@index([token_id])
+  @@index([root_inviter_user_id])
+}
+
+model EntityCommunityInvite {
+  id String @id @default(uuid())
+
+  invite_id String @unique
+  invite UserInvite @relation(fields: [invite_id], references: [id])
+
+  inviter_membership_id String
+  inviter_membership EntityCommunityMember @relation(fields: [inviter_membership_id], references: [id])
+}

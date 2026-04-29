@@ -1,0 +1,13 @@
+import "entity/entity"
+import "entity/posts"
+
+
+model Enterprise {
+  id String @id @default(uuid())
+  name String
+  created_at DateTime @default(now())
+
+  posts Post[]
+  entities Entity[] 
+  
+}

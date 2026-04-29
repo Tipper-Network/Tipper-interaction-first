@@ -1,0 +1,119 @@
+import "../entity/entity"
+import "../user/membership"
+enum PartnershipInvitationSource {
+  OUTBOUND_INVITE
+  INBOUND_REQUEST
+}
+
+enum PartnershipInvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CANCELLED
+  EXPIRED
+  NOT_FOUND
+}
+
+enum PartnershipInvitationIntent {
+  
+  ONBOARD_BUSINESS
+  NETWORK_CREDIBILITY
+  ECOSYSTEM_DEPENDENCY
+  SHARED_VALUES
+
+  // 2. Collaboration & Value Creation
+  FORM_PARTNERSHIP
+  CO_CREATE
+  COLLAB_INTEREST
+  SERVICE_COMPLEMENT
+  // 3. Distribution & Growth
+  AUDIENCE_EXCHANGE
+  CROSS_PROMOTION
+  MARKET_EXPANSION
+  // 4. Operations & Reality
+  COMMUNITY_BUILDING
+  SUPPLIER_RELATION
+  RESOURCE_ACCESS
+  ENDORSEMENT
+  OTHER
+}
+
+
+enum PartnershipType {
+  SPONSORSHIP
+  STRATEGIC_ALLIANCE
+  PRODUCT_PARTNERSHIP
+  DISTRIBUTION_PARTNERSHIP
+  MARKETING_PARTNERSHIP
+  COLLABORATION
+  COMMUNITY_BUILDING
+  EVENT_PARTNERSHIP
+  CONTENT_CREATION
+  TECHNICAL_SUPPORT
+  LEARNING_AND_DEVELOPMENT
+  OTHER_TYPE
+}
+
+enum PartnershipStatus {
+  ACTIVE
+  SUSPENDED
+  ENDED
+}
+
+model PartnershipInvitation {
+  id                        String                         @id @default(uuid())
+  inviter_entity_id       String
+  inviter_entity          Entity                         @relation("InviterEntityInvitations", fields: [inviter_entity_id], references: [id], onDelete: Cascade)
+
+  invitee_entity_id       String?
+  invitee_entity          Entity?                        @relation("InviteeEntityInvitations", fields: [invitee_entity_id], references: [id])
+
+  invitee_name            String?
+  invitee_email           String?
+  invitee_phone           String?
+  invitee_instagram_handle  String
+  note                      String?
+  status                    PartnershipInvitationStatus    @default(PENDING)
+  source                    PartnershipInvitationSource
+  intent                    PartnershipInvitationIntent    @default(ONBOARD_BUSINESS)
+  reward_months             Int                            @default(0)
+  accepted_at               DateTime?
+  expires_at                DateTime?
+  metadata                  Json?
+
+  created_at                DateTime                       @default(now())
+  updated_at                DateTime                       @updatedAt
+
+  partnership               Partnership?                   @relation("InvitationPartnership")
+
+  @@index([inviter_entity_id])
+  @@index([invitee_entity_id])
+  @@index([invitee_instagram_handle])
+  @@index([invitee_email])
+}
+
+
+model Partnership {
+  id                   String                 @id @default(uuid())
+
+  entity_a_id        String
+  entity_a           Entity                 @relation("PartnershipEntityA", fields: [entity_a_id], references: [id], onDelete: Cascade)
+
+  entity_b_id        String
+  entity_b           Entity                 @relation("PartnershipEntityB", fields: [entity_b_id], references: [id], onDelete: Cascade)
+
+  status               PartnershipStatus      @default(ACTIVE)
+  details              Json?
+  partnershipType       PartnershipType?
+  origin_invitation_id String?
+  origin_invitation    PartnershipInvitation? @relation("InvitationPartnership", fields: [origin_invitation_id], references: [id])
+
+  // membership PartnershipMembership[]
+  created_at           DateTime               @default(now())
+  updated_at           DateTime               @updatedAt
+ 
+  @@unique([entity_a_id, entity_b_id])
+  @@unique([origin_invitation_id])
+  @@index([origin_invitation_id])
+}
+

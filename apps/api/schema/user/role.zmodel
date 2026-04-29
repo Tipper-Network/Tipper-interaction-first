@@ -1,0 +1,58 @@
+import "../entity/entity"
+import "user"
+import "../entity/claims"
+import "../partnership/partnership"
+import "../user/membership"
+enum Role {
+  USER
+  
+  VERIFIED
+  
+  ADMIN
+  
+}
+
+// this is the position of the user in the entity, this is used to determine the permissions of the user in the entity
+// where people are managers, staff members, social media managers, etc.
+//Real-world position inside the business
+
+// enum ResourceScope {
+//   ENTITY
+//   COMMUNITY
+//   GLOBAL
+// }
+// this is the role for managing the entity on Tipper
+
+
+
+
+
+enum PermissionScope {
+  ENTITY
+  ENTITY_COMMUNITY
+  PARTNERSHIP
+  EVENT
+  GLOBAL
+}
+
+
+
+//attribute values 
+// entity : manager, staff, member
+// entity_community : admin, member, moderator
+// event : organizer, speaker, attendee
+// global : admin, user
+
+
+model Permission { // this here is where the roles will live ... 
+  id String @id @default(uuid())
+  value String
+  permission_scope PermissionScope
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+// membershipAttributes MembershipAttribute[]
+
+}
+
+

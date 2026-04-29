@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "EntityStatus" ADD VALUE 'SETUP_IN_PROGRESS';

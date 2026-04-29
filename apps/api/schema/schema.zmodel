@@ -1,0 +1,32 @@
+import "entity_community/entity_community"
+import "entity/entity"
+import "entity_community/community_qna"
+import "entity_community/group_chats"
+import "references"
+import "entity_community/polls"
+import "entity/posts"
+import "user/user"
+import "partnership/partnership"
+import "entity_community/feedback"
+import "enterprise"
+import "entity/claims"
+import "user/role"
+import "entity_community/votes"
+import "entity_community/thoughts"
+import "entity/tag"
+import "entity/offering"
+import "entity/brand"   
+import "entity_community/entity_community"  
+import "entity_community/votes"
+import "entity_community/group_chats"
+
+datasource db {
+    provider = 'postgresql'
+    url = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+

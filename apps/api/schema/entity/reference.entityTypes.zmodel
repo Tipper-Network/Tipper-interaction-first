@@ -1,0 +1,24 @@
+// model ReferenceBusinessType {
+//   id           String @id @default(uuid())
+//   industry     String
+//   description  String
+//   name         String
+
+//   classifications EntityClassification[]
+// }
+
+// model ReferenceSocialOrganizationType {
+//   id           String @id @default(uuid())
+//   name         String
+//   explanation  String
+//   examples     String?
+
+//   classifications EntityClassification[]
+// }
+
+// model ReferenceNgoType {
+//   id           String @id @default(uuid())
+//   name         String
+//   explanation  String
+//   focusArea    String?
+// }

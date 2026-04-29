@@ -1,0 +1,79 @@
+import "entity_community"
+import "../user/user"
+import "../entity_community/votes"
+import "../entity/entity"
+import "../entity/tag"
+
+
+
+
+
+
+model Thought {
+  id           String    @id @default(uuid())
+// badge     BadgeType
+
+  description    String
+  created_at     DateTime @default(now())
+  comments_count Int @default(0)
+
+  // member_thought_visibility ThoughtVisibility @default(PUBLIC)
+  thought_tags ThoughtTag[]
+  comments ThoughtComment[]
+  media     ThoughtMedia[]
+  vote_box_id String?
+  vote_box    VoteBox? @relation(fields: [vote_box_id], references: [id])
+
+
+  community_id String
+  community    EntityCommunity @relation(fields: [community_id], references: [id], onDelete: Cascade)
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+  @@unique([vote_box_id])
+  @@index([community_id])
+  @@index([user_id])
+  @@index([community_id, user_id])
+}
+
+
+model ThoughtMedia {
+  id        String   @id @default(uuid())
+  thought_id   String
+  thought      Thought     @relation(fields: [thought_id], references: [id], onDelete: Cascade)
+
+  key       String   // Full S3 URL or object key
+  type      MediaType
+  created_at DateTime @default(now())
+
+  vote_box_id String?
+  vote_box    VoteBox? @relation(fields: [vote_box_id], references: [id])
+
+  @@unique([vote_box_id])
+
+  @@index([thought_id])
+}
+
+
+
+
+model ThoughtComment {
+  id      String @id @default(uuid())
+  thought_id String
+  thought    Thought   @relation(fields: [thought_id], references: [id], onDelete: Cascade)
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  content    String
+  created_at DateTime @default(now())
+
+  vote_box_id String?
+  vote_box    VoteBox? @relation(fields: [vote_box_id], references: [id])
+
+  @@unique([vote_box_id])
+
+  @@index([thought_id, user_id])
+  @@index([user_id])
+}
+

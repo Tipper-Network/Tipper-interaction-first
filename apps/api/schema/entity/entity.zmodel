@@ -1,0 +1,189 @@
+import "../entity_community/entity_community"
+import "../user/user"
+import "../references"
+import "../partnership/partnership"
+import "../user/role"
+import "brand"
+import "tag"
+import "offering"
+import "claims"
+import "../entity_community/votes"
+import "../enterprise"
+import "posts"
+import "../user/membership"
+
+
+enum EntityType {
+  BUSINESS
+  SOCIAL_ORGANIZATION
+  NON_GOVERNMENTAL_ORGANIZATION
+  CIVIC_ORGANIZATION
+  GUILD
+  PERSONAL_BRAND
+  PROFESSIONAL_ASSOCIATION
+  GROUP
+  OTHER
+}
+
+enum EntityStatus {
+  UNCLAIMED
+  CLAIMED
+  SETUP_IN_PROGRESS
+  FULLY_SETUP
+}
+
+enum EntityMediaRole {
+  LOGO
+  COVER
+  GALLERY
+  DOCUMENT
+}
+
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+
+  OTHER
+}
+
+enum VerificationType {
+  IN_PERSON
+  EMAIL
+  PHONE
+  DOCUMENT
+}
+
+model Entity {
+  id                 String                     @id @default(uuid())
+  name               String
+
+  slug               String                     @unique
+  entity_type        EntityType                 @default(BUSINESS)
+  description        String?
+  phone              String?
+  email              String?
+  instagram_url      String?
+  owner_phone_number String?
+  owner_id           String?
+  owner              User? @relation(fields: [owner_id], references: [id])
+  longitude          Float?
+  latitude           Float?
+  accuracy           Float?
+  operates_online    Boolean                    @default(false)
+  metadata           Json?
+  address            Json?
+
+  schedule           Json?
+  entity_status    EntityStatus             @default(UNCLAIMED)
+
+  entity_community  EntityCommunity?         @relation("EntityCommunity")
+
+  request_claims      RequestClaim[]
+
+  entity_interests   EntityInterestsEntries[]
+  entity_values      EntityValuesEntries[]
+  entity_archetypes  EntityArchetypesEntries[]
+
+  entity_positions EntityPosition[]
+  entity_members EntityMember[]
+  
+  sent_partnership_invitations       PartnershipInvitation[] @relation("InviterEntityInvitations")
+  received_partnership_invitations   PartnershipInvitation[] @relation("InviteeEntityInvitations")
+  partnerships_as_a                  Partnership[]           @relation("PartnershipEntityA")
+  partnerships_as_b                  Partnership[]           @relation("PartnershipEntityB")
+
+
+  offerings Offering[]
+  brand Brand?
+  entity_media EntityMedia[]
+  tags EntityTag[]
+  posts Post[]
+
+  enterprise_id String?
+  enterprise Enterprise? @relation(fields: [enterprise_id], references: [id])
+  // policyAssignments PolicyAssignment[]
+
+
+  @@index([slug,instagram_url,email,phone])
+	
+}
+
+
+
+
+model EntityMedia {
+  id        String   @id @default(uuid())
+  entity_id String
+  entity    Entity   @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  key       String   // Full S3 URL or object key
+  type      MediaType
+  
+  role      EntityMediaRole // 'LOGO' | 'COVER' | 'GALLERY' | 'DOCUMENT'
+
+  @@index([entity_id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+//interests, values, archetypes //
+
+model EntityInterestsEntries {
+  id            String          @id @default(uuid())
+  entity_id     String
+  interest_id   String
+
+  entity        Entity          @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  entity_interest ReferenceEntityInterests @relation(fields: [interest_id], references: [id], onDelete: Cascade)
+
+  @@index([entity_id])
+  @@index([interest_id])
+  @@unique([entity_id, interest_id])
+}
+
+model EntityValuesEntries {
+  id          String        @id @default(uuid())
+  entity_id   String
+  value_id    String
+
+  entity      Entity        @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  entity_value ReferenceEntityValues @relation(fields: [value_id], references: [id], onDelete: Cascade)
+
+  @@index([entity_id])
+  @@index([value_id])
+  @@unique([entity_id, value_id])
+}
+
+model EntityArchetypesEntries {
+  id          String         @id @default(uuid())
+  entity_id   String
+  archetype_id  String
+
+  entity      Entity         @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  entity_archetype ReferenceEntityArchetypes @relation(fields: [archetype_id], references: [id], onDelete: Cascade)
+
+  @@index([entity_id])
+  @@index([archetype_id])
+  @@unique([entity_id, archetype_id])
+}
+
+ 
+
+
+
+//
+// model EntityClassification {
+//   id         String     @id @default(uuid())
+
+//   entityId   String
+//   entityType EntityType
+
+//   subtypeId  String
+
+//   entity     Entity @relation(fields: [entityId], references: [id])
+
+//   @@unique([entityId, entityType])
+// }

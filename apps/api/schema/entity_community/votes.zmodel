@@ -1,0 +1,77 @@
+import "../user/user"
+import "../entity/posts"
+import "../entity_community/community_qna"
+import "../entity_community/group_chats"
+import "../entity/entity"
+import "../entity/tag"
+import "thoughts"
+import "feedback"
+
+// Enum for all vote types
+enum VoteType {
+    UP
+    DOWN
+    NEUTRAL
+    HELPFUL
+    NOT_HELPFUL
+}
+
+
+
+// VoteBox: Aggregation/summary layer - one per entity
+// Acts as the connection point between entities and their votes
+model VoteBox {
+    id                String        @id @default(uuid())
+  
+    // Aggregated counts - different entities use different fields
+    upvotes_count     Int           @default(0)      // For POST, COMMUNITY QNA, COMMUNITY QNA RESPONSE, Comments
+    downvotes_count   Int           @default(0)      // For POST, COMMUNITY QNA, COMMUNITY QNA RESPONSE, Comments
+    helpful_count     Int           @default(0)      // For REVIEW
+    not_helpful_count Int           @default(0)      // For REVIEW
+    neutral_count     Int           @default(0)      // For REVIEW
+    created_at        DateTime      @default(now())
+    updated_at        DateTime      @updatedAt
+  
+    // Individual votes that roll up into this box
+    votes             Vote[]
+    
+    // Direct relations from entities (one-to-one) - only one will be set per VoteBox
+    post              Post?
+    post_comment      PostComments?
+    community_qna               CommunityQNA?
+    community_qna_response      CommunityQNAResponses?
+    group_chat        GroupChat?
+    group_chat_message GroupChatMessages?
+    // entity_media      EntityMedia?
+    tag               Tag? 
+    thought             Thought?
+    thought_media       ThoughtMedia?
+    thought_comment     ThoughtComment?
+    feedback_ticket     FeedbackTicket?
+    feedback_comment    FeedbackComment?
+    // vibes             Vibes?
+    // review     Review?  // Will be added when Review model is uncommented
+}
+
+// Vote: Individual vote records - many per VoteBox
+// Contains the actual user votes
+model Vote {
+    id          String   @id @default(uuid())
+
+    vote_type   VoteType
+    created_at  DateTime @default(now())
+    updated_at  DateTime @updatedAt
+
+    user_id     String
+    user        User     @relation(fields: [user_id], references: [id])
+  
+    vote_box_id String
+    vote_box    VoteBox  @relation(fields: [vote_box_id], references: [id], onDelete: Cascade)
+    // Unique constraint: one vote per user per vote box
+    @@unique([user_id, vote_box_id])
+    @@index([vote_box_id, user_id])
+    @@index([user_id])
+}
+
+
+

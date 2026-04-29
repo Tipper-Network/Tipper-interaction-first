@@ -1,0 +1,42 @@
+import "entity_community"
+import "../user/user"
+
+model Poll {
+  id           String    @id @default(uuid())
+  community_id String
+  community    EntityCommunity @relation(fields: [community_id], references: [id], onDelete: Cascade)
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  poll_title String
+  description String
+  created_at  DateTime @default(now())
+
+  poll_options PollOption[]
+}
+
+model PollOption {
+  id      String @id @default(uuid())
+  poll_id String
+  poll    Poll   @relation(fields: [poll_id], references: [id], onDelete: Cascade)
+
+  content    String
+  vote_count Int
+  votes      PollVote[]
+
+  @@index([poll_id])
+}
+
+model PollVote {
+  id        String   @id @default(uuid())
+  user_id   String
+  option_id String
+  voted_at  DateTime @default(now())
+
+  poll_option PollOption @relation(fields: [option_id], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, option_id])
+  @@index([user_id])
+}

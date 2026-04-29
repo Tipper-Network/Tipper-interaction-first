@@ -1,0 +1,53 @@
+import "entity"
+import "../entity_community/entity_community"
+              import "../user/user"
+import "../user/role"
+
+
+enum RequestClaimStatus {
+  PENDING
+  APPROVED
+  DENIED  
+}
+// claims //
+
+model RequestClaim {
+  id                String              @id @default(uuid())
+
+  entity_id         String
+  entity            Entity              @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+
+  community_id      String
+  community         EntityCommunity   @relation(fields: [community_id], references: [id], onDelete: Cascade)
+
+  user_id           String
+  user              User                @relation(fields: [user_id], references: [id])
+
+  claim_status      RequestClaimStatus  @default(PENDING)
+  created_at        DateTime            @default(now())
+  entity_email    String
+  entity_phone    String
+  instagram_url     String?
+  additional_notes  String?
+  entity_type       EntityType
+  verification_type VerificationType
+  claim_media       RequestClaimMedia[]
+
+  @@index([user_id])
+  @@unique([user_id, community_id, entity_id])
+
+
+}
+
+model RequestClaimMedia {
+  id         String         @id @default(uuid())
+
+  claim_id   String
+  claim      RequestClaim   @relation(fields: [claim_id], references: [id], onDelete: Cascade)
+
+  key        String
+  type       MediaType
+  created_at DateTime       @default(now())
+
+  @@index([claim_id])
+}

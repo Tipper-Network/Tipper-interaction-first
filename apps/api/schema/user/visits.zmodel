@@ -1,0 +1,50 @@
+// import "membership"
+import "user"
+import "../entity_community/entity_community"
+import "../references"
+
+// Old visit model (membership-only, replaced by UserCommunityVisit)
+// model EntityCommunityVisit {
+//   id String @id @default(uuid())
+//   communityMember_id String
+//   communityMember EntityCommunityMember @relation(fields: [communityMember_id], references: [id])
+//   scannedAt DateTime @default(now())
+//   source VisitSource @default(QR)
+//   createdAt DateTime @default(now())
+// }
+
+enum VisitSource {
+  INVITE_QR
+  DIRECT_QR
+  
+  BROWSER
+  PROMO_LINK
+
+}
+
+model UserCommunityVisit {
+  id                  String           @id @default(uuid())
+  visited_at          DateTime         @default(now())
+  source              VisitSource      @default(DIRECT_QR)
+
+  // Who visited
+  user_id             String
+  user                User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  // Which community
+  entity_community_id String
+  entity_community    EntityCommunity  @relation(fields: [entity_community_id], references: [id], onDelete: Cascade)
+
+  // Co-captured per visit — membership is resolved at the API layer via user_id + entity_community_id
+  feel_id             String?
+  feel                ReferenceFeels?  @relation(fields: [feel_id], references: [id])
+
+  vibe_id             String?
+  vibe                ReferenceVibes?  @relation(fields: [vibe_id], references: [id])
+
+  @@index([user_id])
+  @@index([entity_community_id])
+  @@index([feel_id])
+  @@index([vibe_id])
+  @@index([visited_at])
+}

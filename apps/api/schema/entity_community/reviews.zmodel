@@ -1,0 +1,78 @@
+// import "entity_community"
+// import "user"
+// import "posts"
+
+// model Review {
+//   id           String    @id @default(uuid())
+//   community_id String
+//   community    EntityCommunity @relation(fields: [community_id], references: [id], onDelete: Cascade)
+
+//   user_id String
+//   user    User   @relation(fields: [user_id], references: [id])
+
+//   rating        Int       // 1-5 stars
+//   review_text   String
+//   created_at    DateTime  @default(now())
+//   updated_at    DateTime  @updatedAt
+  
+//   helpful_count Int       @default(0)
+//   not_helpful_count Int   @default(0)
+//   comments_count Int      @default(0)
+
+//   helpful_votes  ReviewHelpfulVotes[]
+//   comments      ReviewComments[]
+//   media         ReviewMedia[]
+
+//   @@index([community_id])
+//   @@index([user_id])
+//   @@index([community_id, user_id])
+//   @@unique([community_id, user_id]) // One review per user per community
+// }
+
+// model ReviewMedia {
+//   id        String   @id @default(uuid())
+//   review_id String
+//   review    Review   @relation(fields: [review_id], references: [id], onDelete: Cascade)
+
+//   key       String   // Full S3 URL or object key
+//   type      MediaType
+//   created_at DateTime @default(now())
+
+//   @@index([review_id])
+// }
+
+// model ReviewComments {
+//   id      String @id @default(uuid())
+//   review_id String
+//   review    Review   @relation(fields: [review_id], references: [id], onDelete: Cascade)
+
+//   user_id String
+//   user    User   @relation(fields: [user_id], references: [id])
+
+//   content    String
+//   created_at DateTime @default(now())
+
+//   @@index([review_id, user_id])
+//   @@index([user_id])
+// }
+
+// enum ReviewHelpfulType {
+//   HELPFUL
+//   NOT_HELPFUL
+// }
+
+// model ReviewHelpfulVotes {
+//   id      String @id @default(uuid())
+//   review_id String
+//   review    Review   @relation(fields: [review_id], references: [id], onDelete: Cascade)
+//   vote_type ReviewHelpfulType
+
+//   user_id String
+//   user    User   @relation(fields: [user_id], references: [id])
+
+//   created_at DateTime @default(now())
+
+//   @@unique([user_id, review_id])
+//   @@index([review_id, user_id])
+//   @@index([user_id])
+// }

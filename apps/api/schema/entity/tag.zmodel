@@ -1,0 +1,86 @@
+import "entity"
+import "offering"
+import "../entity_community/votes"
+import "../user/user"
+import "../entity_community/thoughts"
+
+enum TagType {
+  AMENITY
+  FOOD
+  PRODUCT
+  FEATURE
+  EXPERIENCE
+  SERVICE
+  OTHER
+  GENRE
+}
+enum TagStatus {
+  ACTIVE        // Canonical, usable everywhere
+  DEPRECATED   // Was active, no longer recommended
+  SUGGESTED     // Proposed by entity/user, pending review
+  REJECTED     // Reviewed and explicitly declined
+REVIEWED     // Reviewed and accepted
+
+}
+
+
+model Tag {
+  id        String   @id @default(uuid())
+  slug      String   @unique   // "board-games"
+  label     String             // "Board Games"
+  type      TagType             // VIBE | AMENITY | FOOD | FEATURE | GENRE
+  status    TagStatus           // ACTIVE | DEPRECATED | SUGGESTED | REJECTED
+	
+    
+tagEntity EntityTag[]
+tagOffering OfferingTag[]
+tagThought ThoughtTag[]
+  vote_box_id String? @unique
+  vote_box    VoteBox? @relation(fields: [vote_box_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdByUserId String?
+  createdByUser User? @relation(fields: [createdByUserId], references: [id])
+}
+
+
+
+
+model EntityTag {
+    id String @id @default(cuid())
+    entity_id String
+    entity Entity @relation(fields: [entity_id], references: [id])
+
+    tag_id String
+    tag Tag @relation(fields: [tag_id], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    @@index([tag_id,entity_id])
+}
+
+model OfferingTag {
+  id         String @id @default(uuid())
+    tag_id      String
+  tag        Tag      @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  offering_id String
+  offering   Offering @relation(fields: [offering_id], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+}
+
+model ThoughtTag { /// tecnincally a badge ( what is this thought related to.)
+  id String @id @default(uuid())
+  thought_id String
+  thought Thought @relation(fields: [thought_id], references: [id])
+
+  tag_id String
+  tag Tag @relation(fields: [tag_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

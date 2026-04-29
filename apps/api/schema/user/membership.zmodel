@@ -1,0 +1,198 @@
+import "../entity_community/entity_community"
+import "user"
+import "role"
+import "../entity/entity"
+import "../partnership/partnership"
+import "../entity/posts"
+import "visits"
+import "invites"
+
+
+enum EntityCommunityMembershipStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  LEFT
+  BANNED
+  REJECTED
+}
+
+// Level system: Using Int instead of enum for flexibility
+// Valid range: 1-10 (or higher in future)
+// Allows numeric comparisons (level >= 3) and easy expansion
+// since we are using the level suystem in the enbteitycommunity, we connect the entity communbity memebr table to the member stats table 
+// model EntityCommunityMemberStats {
+//   id String @id @default(uuid())
+//   entity_community_member_id String
+//   entity_community_member EntityCommunityMember @relation(fields: [entity_community_member_id], references: [id], onDelete: Cascade)
+//   level Int @default(0)
+//   xp Int @default(0)
+//   growth_metrics Json?
+// }
+
+
+model EntityCommunityMember {
+  id String @id @default(uuid())
+
+  status EntityCommunityMembershipStatus @default(PENDING)
+
+// to create a different page in the future 
+  visit_count Int @default(0)
+  lastVisitedAt DateTime?
+  // visits EntityCommunityVisit[]
+  
+  joinedAt DateTime @default(now())
+
+  member_level Int @default(1) // Member level (1-10, can expand higher in future)
+
+  // EntityCommunityMembershipStructure EntityCommunityMembershipStructure[]
+  entity_community_id String
+  entity_community EntityCommunity @relation(fields: [entity_community_id], references: [id] ,onDelete: Cascade)
+
+  user_id String
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+ 
+
+  entity_community_member_position EntityCommunityMemberPosition[]
+  entity_community_invites EntityCommunityInvite[]
+
+  
+  @@index([entity_community_id])
+  @@index([user_id])
+  @@unique([entity_community_id, user_id])
+}
+
+// FUTURE: EntityCommunityPosition - Level-based positions for communities
+// Positions will be tied to community levels (1-10+).
+// Communities must reach certain levels before they can assign specific positions to members.
+// Example: "Moderator" position might require community to be level 3+
+model EntityCommunityMemberPosition {
+  id String @id @default(uuid())
+
+  member_id String
+  member EntityCommunityMember @relation(fields: [member_id], references: [id], onDelete: Cascade)
+
+  position_id String
+  position EntityCommunityPosition @relation(fields: [position_id], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now())
+  expiresAt DateTime?
+
+  @@unique([member_id, position_id])
+  @@index([member_id])
+  @@index([position_id])
+}
+
+model EntityCommunityPosition {
+  id String @id @default(uuid())
+  name String
+
+  entity_community_id String
+  entity_community EntityCommunity @relation(fields: [entity_community_id], references: [id], onDelete: Cascade)
+  
+  entity_community_member_position EntityCommunityMemberPosition[]
+
+  requiredLevel Int @default(1) // Minimum community level to unlock this position (1-10+)
+  hierarchy_level Int @default(1) // numeric (important!)
+  min_reputation Int @default(0)
+  governance_weight Int @default(0)
+  requiresApproval Boolean @default(false)
+  isStaffPosition Boolean @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([entity_community_id, name]) // Prevent duplicate position names per community
+  @@index([entity_community_id])
+}
+
+
+// as fof the entity member table.
+// we have decided that there will be an 
+// model EntityMemberPosition {
+// handled in the role.zmodel file . // // //
+// }
+
+model EntityMember {
+  id String @id @default(uuid())
+
+  entity_member_position EntityMemberPosition[]
+  entity_member_position_id String
+  membership_tier String?        // FREE | PREMIUM | VIP
+  subscription_id String?
+  reputation_score Int @default(0)
+  isVerified Boolean @default(false)
+  expiresAt DateTime?
+  
+  user_id String
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  entity_id String
+  entity Entity @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  posts Post[]
+  @@unique([user_id, entity_member_position_id]) // Prevent duplicate memberships (user can't be in same position twice)
+  @@index([user_id])
+  @@index([entity_member_position_id])
+}
+
+model EntityMemberPosition {
+  id String @id @default(uuid())
+
+  entity_member_id String
+  entityMember EntityMember @relation(fields: [entity_member_id], references: [id], onDelete: Cascade)
+
+  entity_position_id String
+  entityPosition EntityPosition @relation(fields: [entity_position_id], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now())
+  expiresAt DateTime?
+
+  @@unique([entity_member_id, entity_position_id])
+}
+model EntityPosition {
+  id String @id @default(uuid())
+  title String  // allows entities to create the names/positions they want for hteir people to promote culture within itself.
+  entity_id String
+  entity Entity @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  entity_members_positions EntityMemberPosition[]
+  // positionRules Json? // this is the rules for the position, it will be used to determine the permissions of the user in the entity.
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  
+  @@unique([entity_id, title]) // Prevent duplicate position names per entity
+  @@index([entity_id])
+}
+
+// model PartnershipMember {
+//   id String @id @default(uuid())
+//   partnership_id String
+//   partnership Partnership @relation(fields: [partnership_id], references: [id])
+//   attributes membershipAttribute[]
+//   user_id String
+
+
+
+// }
+
+
+
+//  ///// GOVERNANCE RULES  -  This is the rules for the entity community governance.
+
+// model EntityCommunityGovernanceRule {
+//   id String @id @default(uuid())
+
+//   entity_community_id String
+//   entityCommunity EntityCommunity @relation(fields: [entity_community_id], references: [id], onDelete: Cascade)
+
+//   ruleType String         // POSTING | EVENTS | VOTING | PARTNERSHIP
+//   config Json
+
+//   minCommunityLevel Int @default(1)
+
+//   createdAt DateTime @default(now())
+// }
+
+
+
+
+
+

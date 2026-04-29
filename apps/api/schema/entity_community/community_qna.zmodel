@@ -1,0 +1,51 @@
+import "entity_community"
+import "../user/user"
+import "votes"
+
+
+model CommunityQNA {
+  id              String          @id @default(uuid())
+  question        String
+  tags            String[]        @default([""])
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+ 
+  responses_count Int             @default(0)
+  user_id         String
+  user            User            @relation(fields: [user_id], references: [id])
+  community_qna_responses   CommunityQNAResponses[]
+
+  vote_box_id String?
+  vote_box    VoteBox? @relation(fields: [vote_box_id], references: [id])
+
+  @@unique([vote_box_id])
+
+  community_id    String
+  community       EntityCommunity @relation(fields: [community_id], references: [id])
+  @@index([community_id, user_id])
+}
+
+model CommunityQNAResponses {
+  id                 String              @id @default(uuid())
+  community_qna_id             String
+  community_qna                CommunityQNA                 @relation(fields: [community_qna_id], references: [id])
+  parent_response_id String?
+  parent_response    CommunityQNAResponses?       @relation("CommunityQNAResponseHierarchy", fields: [parent_response_id], references: [id], onDelete: Cascade)
+  child_responses    CommunityQNAResponses[]      @relation("CommunityQNAResponseHierarchy")
+
+  depth              Int                 @default(0)
+  response           String
+  created_at         DateTime            @default(now())
+  updated_at         DateTime            @updatedAt
+
+  user_id            String
+  user               User                @relation(fields: [user_id], references: [id])
+  vote_box_id String?
+  vote_box    VoteBox? @relation(fields: [vote_box_id], references: [id])
+
+  @@unique([vote_box_id])
+
+  @@index([community_qna_id, parent_response_id])
+}
+
+

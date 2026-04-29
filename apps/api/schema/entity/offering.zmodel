@@ -1,0 +1,58 @@
+import "../entity/entity"
+import "../entity/tag"
+
+enum OfferingType {
+  MENU
+  SERVICES
+  INVENTORY
+  AMENITY
+  EXPERIENCE
+  OTHER
+}
+enum OfferingFormat {
+  PDF
+  IMAGES
+  STRUCTURED
+LINK
+}
+
+enum OfferingStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Offering {
+  id String @id @default(uuid())
+  entity_id String
+  entity Entity @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+
+  offering_type OfferingType              // ENUM-ish but extensible
+  label String
+  description String?
+  format OfferingFormat
+  status OfferingStatus
+  isSearchable Boolean
+  isPublic Boolean
+  
+  offering_tags OfferingTag[] //“How should the system interpret, group, and surface this offering?”
+  
+  offering_media OfferingMedia[]
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model OfferingMedia {
+  id String @id @default(uuid())
+  key String
+  type MediaType
+
+  offering_id String
+  offering Offering @relation(fields: [offering_id], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+  @@index([offering_id])
+}
+

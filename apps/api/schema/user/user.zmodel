@@ -1,0 +1,132 @@
+import "../entity_community/entity_community"
+import "../entity/posts"
+import "../entity_community/group_chats"
+import "../entity_community/polls"
+import "../references"
+import "../entity/entity"
+import "../entity_community/community_qna"
+import "role"
+import "../entity_community/votes"
+import "../entity_community/thoughts"
+import "../entity/tag"
+import "../entity_community/feedback"
+import "../entity/claims"
+import "../user/membership"
+import "invites"
+import "visits"
+model User {
+  id                      String                   @id @default(uuid())
+  email                   String                   @unique
+  email_verified          Boolean                  @default(false)
+  password                String?
+  federated_identity_user Boolean                  @default(false)
+  user_role               Role
+  profile                 Profile?
+  polls                   Poll[]
+  poll_votes              PollVote[]
+  group_chat_member       GroupChatMembers[]
+  group_chat_messages     GroupChatMessages[]
+  Email_verification_token  EmailVerificationToken[]
+  user_interests          UserInterests[]
+  user_values             UserValues[]
+  user_personas           UserPersonas[]
+
+  user_claims             RequestClaim[]
+owned_entities          Entity[]
+  initiated_communities   EntityCommunity[]        @relation("CommunityInitiator")
+  feedback_tickets        FeedbackTicket[]
+  feedback_comments       FeedbackComment[]
+  ticket_status_changes    FeedbackTicketStatusHistory[] @relation("TicketStatusChanger")
+  //the things that have voting in them
+  votes                   Vote[]
+  // posts                   Post[]
+  post_comments           PostComments[]
+  community_qnas                    CommunityQNA[]
+  community_qna_responses           CommunityQNAResponses[]
+thought_comment   ThoughtComment[]
+	thought Thought[]
+  suggested_tags Tag[]
+  community_memberships   EntityCommunityMember[]
+  entity_members EntityMember[]
+  user_invite_tokens UserInviteToken?
+  root_invites UserInvite[] @relation("RootInviter")
+  received_invites UserInvite[] @relation("InvitedUser")
+  community_visits UserCommunityVisit[]
+ // partnership_memberships PartnershipMembership[]
+}
+
+model Profile {
+  id              String    @id @default(uuid())
+  first_name      String    @default("")
+  last_name       String    @default("")
+  bio             String    @default("")
+  avatar_url       String    @default("")
+  location        String    @default("")
+  date_of_birth   DateTime?
+  interests_setup Boolean   @default(false)
+  profile_setup   Boolean   @default(false)
+  personas_setup  Boolean   @default(false)
+  values_setup    Boolean   @default(false)
+
+  // globalRank   String  // "Agent", "Adventurer"
+  // trustScore   Int
+  reputation      Int       @default(0)  
+  user_level Int @default(0)
+
+  user_id         String    @unique
+  user            User      @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+}
+
+model UserPersonas {
+  id         String   @id @default(uuid())
+  user_id    String
+  persona_id String
+
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  persona    ReferencePersonas @relation(fields: [persona_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, persona_id])
+  @@index([user_id])
+}
+
+
+model UserInterests {
+  id          String    @id @default(uuid())
+  user_id     String
+  interest_id String
+
+  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  interests   ReferenceInterests @relation(fields: [interest_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@unique([user_id, interest_id])
+}
+
+
+model UserValues {
+  id       String @id @default(uuid())
+  user_id  String
+  value_id String
+
+  user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  value    ReferenceValues @relation(fields: [value_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, value_id])
+  @@index([user_id])
+}
+
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  email     String
+  token     String
+  expiresAt DateTime
+
+  user      User     @relation(fields: [email], references: [email], onDelete: Cascade)
+
+  @@index([email])
+  @@index([expiresAt])
+  @@unique([email, token])
+}

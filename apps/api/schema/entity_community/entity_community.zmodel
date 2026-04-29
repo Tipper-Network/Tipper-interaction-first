@@ -1,0 +1,103 @@
+import "../entity/entity"
+import "../user/user"
+import "../entity_community/group_chats"
+import "../entity/posts"
+import "../entity_community/polls"
+import "../entity_community/community_qna"
+import "../references"
+import "../entity_community/thoughts"
+import "../entity/claims"
+import "../entity_community/feedback"
+import "../user/membership"
+import "../user/invites"
+import "../user/visits"
+
+
+enum EntityCommunityStatus {
+  PENDING_APPROVAL
+  PENDING_VERIFICATION
+  UNCLAIMED
+  CLAIMED
+  REJECTED
+}
+
+enum EntityCommunityMemberRole {
+  MEMBER
+  MODERATOR
+  COORDINATOR
+  LEADER
+  ADMIN
+}
+
+
+enum EntityCommunityPrivacy {
+  PUBLIC
+  PRIVATE
+}
+
+model EntityCommunity {
+  id               String                     @id @default(uuid())
+  community_name   String
+ community_level Int @default(1) // Community level (1-10+, determines which positions can be assigned)
+  entity_id        String                  @unique 
+  entity           Entity                  @relation("EntityCommunity", fields: [entity_id], references: [id], onDelete: Cascade)
+  
+  initiated_by_user_id String?  
+  initiated_by         User?                @relation("CommunityInitiator", fields: [initiated_by_user_id], references: [id])
+  
+  slug             String                     @unique
+  description      String?                     
+  users_count      Int                        @default(0)
+  community_status EntityCommunityStatus    @default(PENDING_APPROVAL)
+  entity_community_privacy EntityCommunityPrivacy @default(PUBLIC)
+  feedback_tickets FeedbackTicket[]
+  thoughts          Thought[]
+  polls            Poll[]
+  community_qnas            CommunityQNA[]
+  group_chat       GroupChat[]
+  // positions        EntityCommunityPosition[]
+  request_claims    RequestClaim[]
+  // policyAssignments PolicyAssignment[]
+  members          EntityCommunityMember[]
+  entity_community_positions EntityCommunityPosition[]
+  visits           UserCommunityVisit[]
+  governance_stage Int @default(1) 
+  isAutonomous Boolean @default(false)
+governance_config Json?
+  min_level_to_customize Int @default(3)
+  @@index([entity_id,slug])
+
+}
+// model EntityCommunityMembershipStructure {
+//   id          String @id @default(uuid())
+//   entity_community_member_id    String
+//   level       Int
+
+//   xp          Int
+
+//   rankLabel   String  // "Adventurer", "Agent"
+
+//   entity_community_member      EntityCommunityMember @relation(fields: [entity_community_member_id], references: [id])
+// }
+
+
+// model EntityCommunityVisit {
+//   id String @id @default(uuid())
+//   entity_community_id String
+//   user_id String
+//   visitedAt DateTime @default(now())
+//   entity_community EntityCommunity @relation(fields: [entity_community_id], references: [id])
+//   user User @relation(fields: [user_id], references: [id])
+
+
+//   @@index([entity_community_id])
+//   @@index([user_id])
+// }
+
+
+
+
+
+
+
+

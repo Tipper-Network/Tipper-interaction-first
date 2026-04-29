@@ -1,0 +1,74 @@
+
+
+// enum ActionEnum {
+//   CREATE
+//   READ
+//   UPDATE
+//   DELETE
+// }
+
+// enum PolicyEffect {
+//   ALLOW
+//   DENY
+// }
+// enum ResourceScope {
+//   ENTITY
+//   COMMUNITY
+
+//   GLOBAL
+// }
+
+// model Policy {
+//   id          String   @id @default(uuid())
+        
+//   key         String   @unique
+//   action      ActionEnum   // "create", "edit", "delete", "vote"
+
+//   resourceId  String
+//   resource    Resource @relation(fields: [resourceId], references: [id])
+
+//   conditions  Json     // ABAC logic stored here
+
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+
+//   assignments PolicyAssignment[]
+// }
+
+
+
+
+// model PolicyAssignment {
+//   id                  String   @id @default(uuid())
+
+//   policyId            String
+//   policy              Policy   @relation(fields: [policyId], references: [id])
+
+//   entityId            String?
+//   entity              Entity?  @relation(fields: [entityId], references: [id])
+
+//   entityCommunityId   String?
+//   entityCommunity     EntityCommunity?     @relation(fields: [entityCommunityId], references: [id])
+
+//   effect              PolicyEffect @default(ALLOW)
+//   isActive            Boolean @default(true)
+
+//   createdAt           DateTime @default(now())
+//   updatedAt           DateTime @updatedAt
+
+//   @@index([entityId])
+//   @@index([entityCommunityId])
+// }
+
+
+// model Resource {
+//   id        String   @id @default(uuid())
+//   key       String   @unique  // "community_post", "entity_profile", "event"
+//   scope     ResourceScope             // "ENTITY" | "COMMUNITY" | "GLOBAL"
+
+//   policies  Policy[]
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
