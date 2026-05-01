@@ -134,8 +134,7 @@ const nextConfig: NextConfig = {
             key: "Access-Control-Allow-Origin",
             value:
               process.env.NEXT_PUBLIC_FRONTEND_URL ||
-              process.env.NEXT_PUBLIC_FRONTEND_URL_VERCEL ||
-              "http://localhost:3000",
+              "http://localhost:3030",
           },
           {
             key: "Content-Security-Policy",
