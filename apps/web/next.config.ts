@@ -143,7 +143,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https: 'unsafe-inline'",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "connect-src 'self' wss://api.tippernetwork.com ws://localhost:3001 http://localhost:3001  https://maps.googleapis.com  https://api.tippernetwork.com https://*.s3.amazonaws.com https://tipper-s3-bucket.s3.eu-north-1.amazonaws.com https://tipper-production.up.railway.app",
+              "connect-src 'self' wss://api.tippernetwork.com ws://localhost:8001 http://localhost:8001  https://maps.googleapis.com  https://api.tippernetwork.com https://*.s3.amazonaws.com https://tipper-s3-bucket.s3.eu-north-1.amazonaws.com https://tipper-production.up.railway.app",
               "frame-ancestors 'self'",
             ].join("; "),
           },

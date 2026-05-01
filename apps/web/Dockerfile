@@ -48,7 +48,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
-    PORT=3030
+    PORT=3000
 
 # Run as non-root
 RUN addgroup --system --gid 1001 nodejs \
@@ -61,6 +61,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
 USER nextjs
-EXPOSE 3030
+EXPOSE 3000
 
 CMD ["node", "apps/web/server.js"]

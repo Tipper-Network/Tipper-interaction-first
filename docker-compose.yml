@@ -9,7 +9,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 8001
-      NEXT_PUBLIC_FRONTEND_ORIGIN: ${NEXT_PUBLIC_FRONTEND_ORIGIN:-http://localhost:3030}
+      NEXT_PUBLIC_FRONTEND_ORIGIN: ${NEXT_PUBLIC_FRONTEND_ORIGIN:-http://localhost:3000}
       JWT_SECRET: ${JWT_SECRET}
       DATABASE_URL: ${DATABASE_URL}
       DIRECT_URL: ${DIRECT_URL}
@@ -20,10 +20,10 @@ services:
       dockerfile: apps/web/Dockerfile
     restart: unless-stopped
     ports:
-      - "3030:3030"
+      - "3000:3000"
     environment:
       NODE_ENV: production
-      PORT: 3030
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://api:3001/api}
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://api:8001/api}
     depends_on:
       - api

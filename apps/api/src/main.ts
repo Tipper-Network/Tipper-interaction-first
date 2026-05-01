@@ -17,7 +17,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: process.env.NEXT_PUBLIC_FRONTEND_ORIGIN ?? 'http://localhost:3030',
+    origin: process.env.NEXT_PUBLIC_FRONTEND_ORIGIN ?? 'http://localhost:3000',
     credentials: true,
   });
 
