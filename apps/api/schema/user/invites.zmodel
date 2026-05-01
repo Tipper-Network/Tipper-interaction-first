@@ -37,14 +37,21 @@ model UserInvite {
   token UserInviteToken @relation(fields: [token_id], references: [id])
 
 /// userId thats invited to Tipper through the community or other things.
-  invited_user_id String
-  invited_user User @relation("InvitedUser", fields: [invited_user_id], references: [id])
+// wjat if the user is  not already in the system ? 
+// we need to create a new user if they are not already in the system.
+
+  invited_user_id String?
+  invited_user User? @relation("InvitedUser", fields: [invited_user_id], references: [id])
 
   
   root_inviter_user_id String
   root_inviter_user User @relation("RootInviter", fields: [root_inviter_user_id], references: [id])
 
   status InviteStatus @default(PENDING)
+// who  is being invited ? 
+// why ic he beibng invited ?
+
+
 
   scanned_at DateTime?
   created_at DateTime @default(now())

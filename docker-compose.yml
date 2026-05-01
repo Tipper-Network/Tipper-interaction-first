@@ -12,6 +12,7 @@ services:
       WEB_URL: ${WEB_URL:-http://localhost:3000}
       JWT_SECRET: ${JWT_SECRET}
       DATABASE_URL: ${DATABASE_URL}
+      DIRECT_URL: ${DIRECT_URL}
 
   web:
     build:
