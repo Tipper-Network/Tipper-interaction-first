@@ -35,7 +35,7 @@ COPY apps/api ./apps/api
 RUN pnpm --filter @tipper/api... run build
 
 # Drop dev-only deps from node_modules to slim the runner.
-RUN pnpm --filter @tipper/api... --prod deploy /app/deploy
+RUN pnpm --filter @tipper/api --prod deploy /app/deploy
 
 # ─── production stage ─────────────────────────────────────────────────────────
 # node:22-alpine has a shell — required for Dokploy pre-deploy commands
