@@ -9,6 +9,7 @@
     "build:web": "pnpm --filter @tipper/web... run build",
     "format": "pnpm -r --parallel --if-present run format",
     "lint": "pnpm -r --parallel --if-present run lint",
+
     "db:generate": "pnpm --filter @tipper/api run prisma:generate",
     "db:migrate": "pnpm --filter @tipper/api run prisma:migrate:dev",
     "db:migrate:deploy": "pnpm --filter @tipper/api run prisma:migrate:deploy",
