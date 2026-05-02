@@ -44,7 +44,7 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production \
-    PORT=3001
+    PORT=8001
 
 RUN addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nestjs
@@ -60,6 +60,6 @@ COPY --from=builder --chown=nestjs:nodejs /app/apps/api/schema ./schema
 COPY --from=builder --chown=nestjs:nodejs /app/apps/api/prisma.config.ts ./prisma.config.ts
 
 USER nestjs
-EXPOSE 3001
+EXPOSE 8001
 
 CMD ["node", "dist/main"]
