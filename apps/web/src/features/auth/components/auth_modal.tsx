@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ArrowRight, Sparkles, X } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import AuthWizard from "./auth_wizard";
 import { logout } from "../api/auth_api";
 import { useAuthStore } from "../stores/auth-store";
+import { useAuthModalStore } from "../stores/auth-modal-store";
 
 type Variant = "landing_page" | "header";
 
@@ -34,7 +35,7 @@ export default function AuthModal({
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const [isAuthModalOpen, setAuthModalOpen] = useState(false);
+  const { isOpen: isAuthModalOpen, open: openAuthModal, close: closeAuthModal, mode } = useAuthModalStore();
 
   const isLoggedIn = !!user;
 
@@ -55,13 +56,18 @@ export default function AuthModal({
     },
   ];
 
-  const returnUrl = usePathname() || "/";
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const returnUrl = searchParams?.toString()
+    ? `${pathname}?${searchParams.toString()}`
+    : pathname || "/";
+
   return (
     <>
       {!isLoggedIn ? (
         <Button
           variant="ghost"
-          onClick={() => setAuthModalOpen(true)}
+          onClick={() => openAuthModal("signin")}
           className={className}
         >
           {variant === "landing_page" && (
@@ -137,7 +143,7 @@ export default function AuthModal({
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-background border border-border rounded-2xl p-8 w-full max-w-md relative shadow-lg">
             <Button
-              onClick={() => setAuthModalOpen(false)}
+              onClick={closeAuthModal}
               variant="ghost"
               className="absolute top-4 right-4 p-2 hover:bg-muted rounded-lg transition-colors"
             >
@@ -145,11 +151,9 @@ export default function AuthModal({
             </Button>
 
             <AuthWizard
-              onSuccess={() => {
-                setAuthModalOpen(false);
-                router.refresh();
-              }}
+              onSuccess={closeAuthModal}
               returnUrl={returnUrl}
+              mode={mode}
             />
           </div>
         </div>

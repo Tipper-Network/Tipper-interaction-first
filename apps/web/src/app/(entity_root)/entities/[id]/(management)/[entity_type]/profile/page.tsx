@@ -1,7 +1,7 @@
 import { EntityProfileClient } from "./entity-profile-client";
-import { EntityType__Enum } from "@/lib/shared/enum_types";
+import { EntityType__Enum } from "@tipper/shared";
 import { notFound } from "next/navigation";
-import { fetchEntityDetails } from "@/features/entities/shared/api/entities_api";
+import { fetchEntityDetails } from "@/views/entities/shared/api/entities_api";
 type PageProps = {
   params: Promise<{ id: string; entity_type: string }>;
 };

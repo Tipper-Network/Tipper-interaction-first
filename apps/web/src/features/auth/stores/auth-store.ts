@@ -2,17 +2,13 @@
 
 import { create } from "zustand";
 import { getSessionUser } from "../api/auth_api";
+import { Role__Enum } from "@tipper/shared";
 
-export enum UserRole__Enum {
-  ADMIN = "ADMIN",
-  USER = "USER",
-  VERIFIED = "VERIFIED",
-}
 
 type User = {
   email_verified: boolean;
   federated_identity_user: boolean;
-  user_role: UserRole__Enum;
+  user_role: Role__Enum;
   email: string;
 };
 

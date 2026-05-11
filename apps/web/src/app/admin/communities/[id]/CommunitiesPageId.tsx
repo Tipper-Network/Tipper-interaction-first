@@ -21,16 +21,17 @@ import {
   FileText,
   ExternalLink,
 } from "lucide-react";
-import AdminEntityDetailsComponent from "@/features/entities/admin/components/admin_entity_details_component";
-import { changeCommunityStatus } from "@/features/communities/admin/api/admin_communities_api";
-import { EntityCommunityStatus__Enum } from "@/lib/shared/enum_types";
-import AdminCommunityDetailsComponent from "@/features/communities/admin/components/admin_community_page_details";
-import AdminCommunityClaims from "@/features/communities/admin/components/admin_community_claims";
+import AdminEntityDetailsComponent from "@/views/entities/admin/components/admin_entity_details_component";
+import { changeCommunityStatus } from "@/views/communities/admin/api/admin_communities_api";
+import { EntityCommunityStatus__Enum } from "@tipper/shared";
+import AdminCommunityDetailsComponent from "@/views/communities/admin/components/admin_community_page_details";
+import AdminCommunityClaims from "@/views/communities/admin/components/admin_community_claims";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import BackButton from "@/components/back_button";
-import { useCommunityDetails } from "@/features/communities/hooks/community_hooks";
-import { StatusBadge } from "@/components/StatusBadge";
+import { useCommunityDetails } from "@/views/communities/hooks/community_hooks";
+import { StatusBadge } from "@/components/status_badge";
+
 
 const AdminCommunityDetailsPage = ({ id }: { id: string }) => {
   const router = useRouter();

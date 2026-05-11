@@ -1,8 +1,9 @@
 import React from "react";
 import { Toaster } from "@/components/ui/sonner";
-import Header from "@/components/header/header";
-import Footer from "@/components/footer/footer";
+import Header from "@/components/layout/header/header";
+import Footer from "@/components/layout/footer/footer";
 import AnimatedActionButtons from "@/components/initiation_structures/animated_action_buttons";
+import AuthModal from "@/features/auth/components/auth_modal";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -10,10 +11,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="relative w-full">
         <Header />
       </div>
-      <div className="fixed  bottom-10 right-10 z-50">
+      {/* <div className="fixed  bottom-10 right-10 z-50">
         <AnimatedActionButtons />
-      </div>
-
+      </div> */}
       {children}
 
       <div className="w-full max-w-screen-2xl">

@@ -21,13 +21,13 @@ import {
   FileText,
   ExternalLink,
 } from "lucide-react";
-import AdminEntityDetailsComponent from "@/features/entities/admin/components/admin_entity_details_component";
-import AdminClaimDetailsComponent from "@/features/entities/admin/components/admin_claims_details_component";
+import AdminEntityDetailsComponent from "@/views/entities/admin/components/admin_entity_details_component";
+import AdminClaimDetailsComponent from "@/views/entities/admin/components/admin_claims_details_component";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-import { changeClaimStatus } from "@/features/entities/admin/api/admin_entities_api";
-import { RequestClaimStatus__Enum } from "@/lib/shared/enum_types";
+import { changeClaimStatus } from "@/views/entities/admin/api/admin_entities_api";
+import { RequestClaimStatus__Enum } from "@tipper/shared";
 
 const AdminEntityDetailsPage = ({ id }: { id: string }) => {
   const router = useRouter();

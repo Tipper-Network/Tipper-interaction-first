@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-      import AuthWizard from "@/features/auth/components/auth_modal";
+import AuthWizard from "@/features/auth/components/auth_wizard";
 
 export default function EmailVerificationPage() {
   const searchParams = useSearchParams();

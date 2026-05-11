@@ -1,7 +1,8 @@
 "use client";
 
-import { getEntityAdminPage } from "@/features/entities/shared/utils/entity_component_resolver";
-import { EntityType__Enum } from "@/lib/shared/enum_types";
+import { getEntityAdminPage } from "@/views/entities/shared/utils/entity_component_resolver";
+import { EntityType__Enum } from "@tipper/shared";
+
 
 interface EntityProfileClientProps {
   entityId: string;

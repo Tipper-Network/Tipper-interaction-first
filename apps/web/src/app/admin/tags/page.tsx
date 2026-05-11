@@ -13,7 +13,7 @@ import {
   useAdminSuggestedTags,
   useAdminUpdateTagStatus,
 } from "@/features/tags/hooks/tags_hooks";
-import { TagStatus__Enum } from "@/lib/shared/enums/tags_enums";
+import { TagStatus__Enum } from "@tipper/shared";
 import { useState } from "react";
 
 export default function AdminTagsPage() {

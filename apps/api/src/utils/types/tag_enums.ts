@@ -1,0 +1,16 @@
+export enum TagType__Enum {
+  AMENITY = 'AMENITY',
+  PRODUCT = 'PRODUCT',
+  FEATURE = 'FEATURE',
+  EXPERIENCE = 'EXPERIENCE',
+  GENRE = 'GENRE',
+  SERVICE = 'SERVICE',
+  OTHER = 'OTHER',
+}
+
+export enum TagStatus__Enum {
+  ACTIVE = 'ACTIVE',
+  DEPRECATED = 'DEPRECATED',
+  SUGGESTED = 'SUGGESTED',
+  REJECTED = 'REJECTED',
+}

@@ -1,0 +1,18 @@
+export type BusinessTypeGroup = {
+  industry: string;
+  industry_description: string;
+  business_types: { id: string; business_type: string }[];
+};
+
+export enum EntityType__Enum {
+  BUSINESS = 'BUSINESS',
+  SOCIAL_ORGANIZATION = 'SOCIAL_ORGANIZATION',
+  NON_GOVERNMENTAL_ORGANIZATION = 'NON_GOVERNMENTAL_ORGANIZATION',
+  CIVIC_ORGANIZATION = 'CIVIC_ORGANIZATION',
+  ACADEMIC_INSTITUTION = 'ACADEMIC_INSTITUTION',
+  GUILD = 'GUILD',
+  PERSONAL_BRAND = 'PERSONAL_BRAND',
+  PROFESSIONAL_ASSOCIATION = 'PROFESSIONAL_ASSOCIATION',
+  GROUP = 'GROUP',
+  OTHER = 'OTHER',
+}

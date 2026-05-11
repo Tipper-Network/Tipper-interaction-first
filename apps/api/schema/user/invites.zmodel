@@ -15,6 +15,7 @@ enum UserInviteSource {
     TELEGRAM
     OTHER
 }
+
 model UserInviteToken {
   id String @id @default(uuid())
 
@@ -30,6 +31,7 @@ model UserInviteToken {
 
   @@index([user_id])
 }
+
 model UserInvite {
   id String @id @default(uuid())
 
@@ -43,7 +45,12 @@ model UserInvite {
   invited_user_id String?
   invited_user User? @relation("InvitedUser", fields: [invited_user_id], references: [id])
 
-  
+  // who are you inviting ?
+  // why are you inviting htem ? 
+  // what is the purpose of the invite ?
+  // what value do you think they will bring. 
+  // what value do you think they will get out of it 
+
   root_inviter_user_id String
   root_inviter_user User @relation("RootInviter", fields: [root_inviter_user_id], references: [id])
 
@@ -68,6 +75,12 @@ model EntityCommunityInvite {
   invite_id String @unique
   invite UserInvite @relation(fields: [invite_id], references: [id])
 
+ // who are you inviting ?
+  // why are you inviting htem ? 
+  // what is the purpose of the invite ?
+  // what value do you think they will bring. 
+  // what value do you think they will get out of it 
+  
   inviter_membership_id String
   inviter_membership EntityCommunityMember @relation(fields: [inviter_membership_id], references: [id])
 }

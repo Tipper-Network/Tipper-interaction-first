@@ -1,5 +1,5 @@
 "use client";
-import { NeutralDialog } from "@/components/NeutralDialog";
+import { NeutralDialog } from "@/components/neutral_dialog";
 import { Button } from "@/components/ui/button";
 import { useNavigationGuard } from "next-navigation-guard";
 import React, { useState } from "react";

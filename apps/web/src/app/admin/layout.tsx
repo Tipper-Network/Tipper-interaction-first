@@ -1,4 +1,4 @@
-import AdminSideBar from "@/components/admin/admin_sidebar";
+import AdminSideBar from "@/views/entities/admin/components/admin_sidebar";
 import {
   SidebarProvider,
   SidebarTrigger,

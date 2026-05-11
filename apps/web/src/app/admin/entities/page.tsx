@@ -20,7 +20,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useState } from "react";
-import { useInfiniteClaims } from "@/features/entities/admin/hooks/admin_entities_hooks";
+import { useInfiniteClaims } from "@/views/entities/admin/hooks/admin_entities_hooks";
 import { useRouter } from "next/navigation";
 
 const AdminEntitiesPage = () => {

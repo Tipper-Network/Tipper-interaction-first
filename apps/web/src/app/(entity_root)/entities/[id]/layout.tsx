@@ -1,4 +1,4 @@
-import EntitySideBar from "@/components/entity/entity_sidebar";
+import EntitySideBar from "@/views/entities/shared/components/entity_sidebar";
 import {
   SidebarProvider,
   SidebarTrigger,
@@ -8,11 +8,8 @@ import QueryProvider from "@/lib/providers/QueryProvider";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import Image from "next/image";
-import { fetchEntityDetails } from "@/features/entities/shared/api/entities_api";
-import EntityOnboardingRedirect from "@/features/entities/shared/components/onboarding/entity_onboarding_redirect";
-import { getSessionUser } from "@/features/auth/api/auth_api";
-import { UserRole__Enum } from "@/features/auth/stores/auth-store";
-import { redirect } from "next/navigation";
+import { fetchEntityDetails } from "@/views/entities/shared/api/entities_api";
+
 
 export const metadata = {
   title: "Admin Dashboard - Tipper",

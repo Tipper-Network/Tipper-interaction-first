@@ -1,4 +1,4 @@
-import ClaimRequestComponent from "@/features/entities/shared/components/claim_request/claim_request_component";
+import ClaimRequestComponent from "@/views/entities/shared/components/claim_request/claim_request_component";
 
 interface Props {
   searchParams: Promise<{ community_id?: string; entity_id?: string }>;
@@ -19,7 +19,7 @@ const ClaimRequestPage = async ({ searchParams }: Props) => {
           <p className="text-muted-foreground">
             Please access this page through a valid business listing.
           </p>
-        </div>
+        </div>    
       </div>
     );
   }

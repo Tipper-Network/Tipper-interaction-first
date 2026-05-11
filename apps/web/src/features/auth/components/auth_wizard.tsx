@@ -35,6 +35,7 @@ import {
   type VerificationCodeFormData,
 } from "../types/auth_schema";
 import { DullGoogleIcon } from "@/icons/links_button_icons";
+import { Role__Enum } from "@tipper/shared";
 
 type Mode = "signin" | "signup" | "verification";
 
@@ -107,8 +108,8 @@ export default function AuthWizard({
         await useAuthStore.getState().refetch();
 
         //new block, probably can be written better
-        const user_role = useAuthStore.getState().user.user_role;
-        if (user_role === "ADMIN") {
+        const user_role = useAuthStore.getState().user?.user_role;
+        if (user_role === Role__Enum.ADMIN) {
           router.push("/admin");
           onSuccess?.();
           return;
@@ -116,12 +117,10 @@ export default function AuthWizard({
 
         //end of it
 
-        // Check if profile exists after login
         const profile = useAuthStore.getState().profile;
         if (!profile) {
-          // No profile - redirect to onboarding to create one
-          // If returnUrl contains invitationId, pass it as query param
           const onboardingUrl = getOnboardingUrl(returnUrl);
+          onSuccess?.();
           router.push(onboardingUrl);
         } else {
           // Profile exists - redirect to returnUrl if provided, otherwise refresh
@@ -147,16 +146,11 @@ export default function AuthWizard({
 
       // Use hasProfile from response to redirect immediately without calling auth/me
       if (!response.hasProfile) {
-        // No profile - redirect to onboarding to create one
-        // If returnUrl contains invitationId, pass it as query param
-        // Don't call refetch() here - let the onboarding page handle it via RedirectHandler
-        // This prevents auth/me from being called before redirect
-        // Use replace to avoid adding to history stack
         const onboardingUrl = returnUrl
           ? `/users/onboarding?returnUrl=${encodeURIComponent(returnUrl)}`
           : "/users/onboarding";
+        onSuccess?.();
         router.replace(onboardingUrl);
-        // Don't call onSuccess here - let the onboarding page handle the flow
         return;
       } else {
         // Profile exists - update auth store and redirect

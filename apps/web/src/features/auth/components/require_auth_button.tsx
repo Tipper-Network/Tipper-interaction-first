@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAuthStore } from "../stores/auth-store";
 import AuthWizard from "./auth_wizard";
 import { Button, ButtonProps } from "@/components/ui/button";
-import { NeutralDialog } from "@/components/NeutralDialog";
+import { NeutralDialog } from "@/components/neutral_dialog";
 
 interface RequireAuthButtonProps extends ButtonProps {
   /**

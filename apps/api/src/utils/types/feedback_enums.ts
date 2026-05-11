@@ -1,0 +1,20 @@
+enum TicketType__Enum {
+  FEATURE = 'FEATURE',
+  COMPLAINT = 'COMPLAINT',
+  SUGGESTION = 'SUGGESTION',
+  EVENT_IDEA = 'EVENT_IDEA',
+  IMPROVEMENT = 'IMPROVEMENT',
+}
+
+enum TicketStatus__Enum {
+  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  IN_PROGRESS = 'IN_PROGRESS',
+  OPEN = 'OPEN',
+  PLANNED = 'PLANNED',
+  COMPLETED = 'COMPLETED',
+  CLOSED = 'CLOSED',
+  REJECTED = 'REJECTED',
+  DUPLICATE = 'DUPLICATE',
+}
+
+export { TicketType__Enum, TicketStatus__Enum };

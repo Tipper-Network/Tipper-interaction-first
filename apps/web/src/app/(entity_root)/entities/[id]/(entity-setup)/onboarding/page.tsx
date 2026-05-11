@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import EntityProfileSetup from "@/features/entities/shared/components/onboarding/entity_profile_setup";
+import EntityProfileSetup from "@/views/entities/shared/components/onboarding/entity_profile_setup";
 
 interface Props {
   params: Promise<{ id: string }>;
