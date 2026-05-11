@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import EntityWelcomePage from "@/features/welcome_page/components/entity_welcome_page";
-import { fetchEntityBySlug } from "@/features/entities/shared/api/entities_api";
+import EntityWelcomePage from "@/views/welcome/components/entity_welcome_page";
+import { fetchEntityBySlug } from "@/views/entities/shared/api/entities_api";
 
 type PageProps = {
   params: Promise<{

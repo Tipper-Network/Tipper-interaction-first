@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { getEntityTypeDisplayName } from "@/features/explore_page_components/tabs_types_management";
+import { getEntityTypeDisplayName } from "@/views/explore/tabs_types_management";
 export interface Entity {
   id: string;
   name: string;

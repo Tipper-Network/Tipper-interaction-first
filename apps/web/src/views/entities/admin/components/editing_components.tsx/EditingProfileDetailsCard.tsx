@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -19,13 +19,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { updateEntityDetails } from "@/features/entities/shared/api/update_entitiy_api";
-import { getEntityProfileDetailItems } from "@/features/entities/shared/utils/entity_items_resolver";
-import { ProfileDetailsCard } from "@/features/entities/shared/components/profile_components/profile_details_card";
+import { updateEntityDetails } from "@/views/entities/shared/api/update_entitiy_api";
+import { getEntityProfileDetailItems } from "@/views/entities/shared/utils/entity_items_resolver";
+import { ProfileDetailsCard } from "@/views/entities/shared/components/profile_components/profile_details_card";
 import {
   EntityDetailsDraftSchema,
   EntityDetailsDraft,
-} from "@/features/entities/admin/validation/entity_details_schema";
+} from "@/views/entities/admin/validation/entity_details_schema";
 
 type EditingProfileDetailsCardProps = {
   entity: any;
@@ -46,7 +46,7 @@ export default function EditingProfileDetailsCard({
 
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const form = useForm<EntityDetailsDraft>({
-    resolver: zodResolver(EntityDetailsDraftSchema),
+    resolver: zodResolver(EntityDetailsDraftSchema) as Resolver<EntityDetailsDraft>,
     defaultValues: {
       contact: {
         instagram_url: "@",

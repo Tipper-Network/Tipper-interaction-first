@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import WhatsAppChatButton from "@/components/button_external_links/whatsapp_chat_button";
-import type { ProfileDetailItem } from "@/features/entities/shared/components/profile_components/profile_details_card";
+import type { ProfileDetailItem } from "@/views/entities/shared/components/profile_components/profile_details_card";
 import InstagramUrlLink from "@/components/button_external_links/InstagramUrlLink";
 import GoogleMapsUrl from "@/components/button_external_links/google_maps_url";
 import {

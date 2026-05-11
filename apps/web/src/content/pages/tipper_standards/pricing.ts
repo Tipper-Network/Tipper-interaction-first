@@ -1,0 +1,62 @@
+export const PRICING = {
+  title: "Simple, Transparent Pricing",
+  intro:
+    "Choose the plan that best fits your business needs. All plans include our core features to help you establish and grow your digital presence.",
+  mostPopular: "Most Popular",
+  comingSoon: "Coming Soon",
+  plans: [
+    {
+      name: "Starter",
+      price: "Free",
+      description: "Perfect for small businesses getting started",
+      features: [
+        "Basic business profile",
+        "QR code generation",
+        "Community engagement",
+        "Basic analytics",
+        "Email support",
+      ],
+      buttonText: "Get Started",
+      popular: false,
+      active: true,
+      whatsapp: false,
+    },
+    {
+      name: "Professional",
+      price: "$27",
+      period: "/month",
+      description: "Ideal for growing businesses",
+      features: [
+        "Everything in Starter",
+        "Advanced analytics",
+        "Event management",
+        "Partnership network",
+        "Priority support",
+        "Custom branding",
+      ],
+      buttonText: "Start Free Trial",
+      popular: true,
+      active: false,
+      whatsapp: false,
+    },
+    {
+      name: "Enterprise",
+      price: "Custom",
+      description: "For large organizations and franchises",
+      features: [
+        "Everything in Professional",
+        "Multi-location management",
+        "Advanced integrations",
+        "Dedicated account manager",
+        "Custom features",
+        "API access",
+      ],
+      buttonText: "Contact Sales",
+      popular: false,
+      active: false,
+      whatsapp: true,
+    },
+  ],
+  enterpriseWhatsappMessage:
+    "Hi! I'm interested in the Enterprise plan for Tipper Network. Can you provide more information?",
+} as const;

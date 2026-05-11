@@ -45,9 +45,11 @@ const FitCheckComponent = () => {
     },
   ];
   return (
-    <section className="relative  overflow-hidden  px-4 py-16 sm:px-6 sm:py-20">
-      <div className="relative mx-auto">
+    <section className="relative  bg-primary-tint/50 overflow-hidden  px-4 py-16 sm:px-6 sm:py-20">
+        <TopWaveComponent />
+      <div className="relative mx-auto ">
         {/* Title Section */}
+        
         <div className="mb-4  mt-4 text-center sm:mb-12">
           <h1 className="mb-2 text-center flex md:flex-row flex-col items-center justify-center text-4xl font-bold  text-foreground sm:text-5xl md:text-6xl">
             <div className="  md:-mt-10 ">
@@ -114,13 +116,14 @@ const FitCheckComponent = () => {
         </div>
 
         {/* Bottom CTA Section */}
-        <div className="text-center">
+        {/* <div className="text-center">
           <p className="mb-4 text-lg font-medium text-foreground sm:text-xl md:text-2xl">
             If You Are Not!!
           </p>
      
-        </div>
+        </div> */}
       </div>
+      <BottomWaveComponent />
     </section>
   );
 };

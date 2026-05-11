@@ -6,10 +6,10 @@ import { NeutralDialog } from "@/components/neutral_dialog";
 import StepEntityArchetype from "../entity_onboarding_form/steps/entity_archetype_step";
 import StepEntityValues from "../entity_onboarding_form/steps/entity_values_step";
 import StepEntityInterests from "../entity_onboarding_form/steps/entity_interests_step";
-import { createEntityIdentity } from "@/features/entities/shared/api/entities_api";
-import { useEntityDetails } from "@/features/entities/shared/hooks/entities_hooks";
+import { createEntityIdentity } from "@/views/entities/shared/api/entities_api";
+import { useEntityDetails } from "@/views/entities/shared/hooks/entities_hooks";
 
-interface EntityOnboardingModalProps {
+interface EntityOnboardingModalProps {  
   open: boolean;
   onClose: () => void;
   step: "archetypes" | "values" | "interests" | null;

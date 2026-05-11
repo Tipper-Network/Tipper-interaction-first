@@ -33,13 +33,15 @@ const CommunityQNATab = dynamic(
 
 import { useCommunityDetails } from "../../hooks/community_hooks";
 import { joinCommunity } from "../../api/communities_api";
-import CommunityPageDetails from "@/features/communities/components/community_details_page/community_page_details";
+import CommunityPageDetails from "@/views/communities/components/community_details_page/community_page_details";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import CommunityPageRight from "./community_page_right";
 
 import ProfileBanner from "@/features/onboarding/components/user_onboarding_form/profile_banner";
 import ShareButton from "@/features/share/components/share_button";
+import InitiationButton from "@/features/initiation/components/initiation_button";
+import PendingInvitesPanel from "@/features/initiation/components/pending_invites_panel";
 
 interface CommunityPageMainProps {
   communityId: string;
@@ -51,6 +53,7 @@ const CommunityPageMain: React.FC<CommunityPageMainProps> = ({
   const { data, isLoading, isError, refetch } =
     useCommunityDetails(communityId);
   const [hasJoined, setHasJoined] = useState(false);
+  const [inviteRefetchTrigger, setInviteRefetchTrigger] = useState(0);
 
   // console.log(communityId);
   // console.log(data);
@@ -124,6 +127,22 @@ const CommunityPageMain: React.FC<CommunityPageMainProps> = ({
       <div className="max-w-6xl mx-auto">
         <ProfileBanner />
       </div>
+
+      {/* Member-only: Initiation button + pending invites */}
+      {hasJoined && (
+        <div className="max-w-6xl mx-auto mb-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <InitiationButton
+              community_id={communityId}
+              onInviteCreated={() => setInviteRefetchTrigger((n) => n + 1)}
+            />
+          </div>
+          <PendingInvitesPanel
+            community_id={communityId}
+            refetchTrigger={inviteRefetchTrigger}
+          />
+        </div>
+      )}
 
       {/* Main Content Area - Responsive Layout */}
       <div className="flex flex-col xl:flex-row gap-6">

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { Role__Enum } from "@/lib/shared/enum_types";
+import { Role__Enum } from "@tipper/shared";
 type SessionUser = {
   id: string;
   federated_identity_user: boolean;

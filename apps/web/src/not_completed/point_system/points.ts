@@ -6,7 +6,7 @@ import {
   ACTION_CONFIG,
 } from "./points_config";
 
-const getUserLevelInCommunity = (xpPoints: number): CommunityLevels => {
+const getUserLevelInCommunity = (xpPoints: number): CommunityLevels | null => {
   if (xpPoints <= 50) {
     return CommunityLevels.LEVEL_1;
   } else if (xpPoints >= 50 && xpPoints <= 100) {

@@ -5,7 +5,7 @@ import {
   fetchTags,
   suggestTag,
 } from "../api/tags_api";
-import { TagStatus__Enum, TagType__Enum } from "@/lib/shared/enums/tags_enums";
+import { TagStatus__Enum, TagType__Enum } from "@tipper/shared";
 
 export function useTags(input?: {
   status?: TagStatus__Enum;

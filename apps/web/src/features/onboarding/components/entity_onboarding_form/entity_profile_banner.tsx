@@ -2,15 +2,15 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { useEntityDetails } from "@/features/entities/shared/hooks/entities_hooks";
+import { useEntityDetails } from "@/views/entities/shared/hooks/entities_hooks";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
-import { X, ArrowRight, Building2 } from "lucide-react";
+import { X, ArrowRight, Building2 } from "lucide-react";  
 import { cn } from "@/lib/utils/utils";
 import EntityOnboardingModal from "../onboarding_modal/entity_onboarding_modal";
-import { getEntityOnboardingUrl } from "@/features/entities/shared/utils/entity_routes";
-import { EntityStatus__Enum } from "@/lib/shared/enum_types";
+import { getEntityOnboardingUrl } from "@/views/entities/shared/utils/entity_routes";
+import { EntityStatus__Enum } from "@tipper/shared";
 import {
   ArchetypesIcon,
   ValuesIcon,

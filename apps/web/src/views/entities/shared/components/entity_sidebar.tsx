@@ -28,8 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { useEntityDetails } from "@/features/entities/shared/hooks/entities_hooks";
-import { getEntityProfileUrl } from "@/features/entities/shared/utils/entity_routes";
+import { useEntityDetails } from "@/views/entities/shared/hooks/entities_hooks";
 
 interface EntitySidebarProps {
   entityId: string;

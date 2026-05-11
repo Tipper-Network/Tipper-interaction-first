@@ -1,9 +1,9 @@
-import { EntityType__Enum } from "@/lib/shared/enum_types";
+import { EntityType__Enum } from "@tipper/shared";
 import { ComponentType } from "react";
 
 // Import entity type-specific page components
-import BusinessPage from "@/features/entities/entity_types/businesses/components/BusinessPage";
-import AdminBusinessPage from "@/features/entities/admin/entity_types/admin_business_page";
+import BusinessPage from "@/views/entities/entity_types/businesses/components/BusinessPage";
+import AdminBusinessPage from "@/views/entities/admin/entity_types/admin_business_page";
 
 // Define component interface
 export interface EntityPageProps {

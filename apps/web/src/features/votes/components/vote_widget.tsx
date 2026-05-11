@@ -1,5 +1,5 @@
 import React from "react";
-import { VoteType__Enum } from "@/lib/shared/enum_types";
+import { VoteType__Enum } from "@tipper/shared";
 import { useCastVote } from "../hooks/votes_hooks";
 import { ToolTipWrapper } from "@/components/toolTip_Wrapper";
 import { Button } from "@/components/ui/button";

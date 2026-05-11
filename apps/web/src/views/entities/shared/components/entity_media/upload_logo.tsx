@@ -10,7 +10,7 @@ import { UploadMedia } from "@/components/upload_file";
 import {
   useUpdateEntityLogo,
   useEntityLogo,
-} from "@/features/entities/shared/hooks/entities_media_hooks";
+} from "@/views/entities/shared/hooks/entities_media_hooks";
 import Image from "next/image";
 import LogoViewComponent from "@/components/logo_view_component";
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { EntityType__Enum } from "@/lib/shared/enum_types";
-import type { UpdateEntityPayload } from "@/features/entities/shared/api/types";
+import { EntityType__Enum } from "@tipper/shared";
+import type { UpdateEntityPayload } from "@/views/entities/shared/api/types";
 
 const InstagramHandleSchema = z
   .string()

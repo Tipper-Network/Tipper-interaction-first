@@ -3,11 +3,11 @@
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 const EntityGrid = dynamic(
-  () => import("@/features/entities/shared/utils/entity_grid"),
+  () => import("@/views/entities/shared/utils/entity_grid"),
   { ssr: false }
 );
-import { useInfiniteEntities } from "@/features/entities/shared/hooks/entities_hooks";
-import { EntityType__Enum } from "@/lib/shared/enum_types";
+import { useInfiniteEntities } from "@/views/entities/shared/hooks/entities_hooks";
+import { EntityType__Enum } from "@tipper/shared";
 
 interface EntityTypeListProps {
   entityType: EntityType__Enum;

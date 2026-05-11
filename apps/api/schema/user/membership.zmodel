@@ -54,9 +54,12 @@ model EntityCommunityMember {
  
 
   entity_community_member_position EntityCommunityMemberPosition[]
-  entity_community_invites EntityCommunityInvite[]
+  entity_community_invites         EntityCommunityInvite[]
 
-  
+  // The invite that led to this membership — null for founding/admin members
+  origin_invite_id String? @unique
+  origin_invite    EntityCommunityInvite? @relation("InviteOrigin", fields: [origin_invite_id], references: [id])
+
   @@index([entity_community_id])
   @@index([user_id])
   @@unique([entity_community_id, user_id])

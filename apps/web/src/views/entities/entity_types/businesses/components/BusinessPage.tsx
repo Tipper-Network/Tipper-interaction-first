@@ -4,28 +4,28 @@ import EntityProfileBanner from "@/features/onboarding/components/entity_onboard
 import {
   useEntityDetails,
   useUserEntityClaims,
-} from "@/features/entities/shared/hooks/entities_hooks";
+} from "@/views/entities/shared/hooks/entities_hooks";
 import {
   ProfileHeader,
   ProfileDetailsCard,
   ProfileImagesGrid,
   ProfilePills,
-} from "@/features/entities/shared/components/profile_components";
-import { EntityNavButton } from "@/features/entities/shared/components/profile_components/entity_nav_button";
+} from "@/views/entities/shared/components/profile_components";
+import { EntityNavButton } from "@/views/entities/shared/components/profile_components/entity_nav_button";
 import { useAuthStore } from "@/features/auth/stores/auth-store";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronRight, Users, Map, MapIcon } from "lucide-react";
-import { RequestPartnershipModal } from "@/features/partnerships/components/request_partnership_modal";
-import { getEntityProfileDetailItems } from "@/features/entities/shared/utils/entity_items_resolver";
-import ProfileOfferings from "@/features/offerings/components/profile_offerings";
+import { getEntityProfileDetailItems } from "@/views/entities/shared/utils/entity_items_resolver";
 import {
   useEntityGallery,
   useEntityLogo,
-} from "@/features/entities/shared/hooks/entities_media_hooks";
+} from "@/views/entities/shared/hooks/entities_media_hooks";
 import { Button } from "@/components/ui/button";
 import { CommunityIcon } from "@/icons/utility_icons";
 import ShareButton from "@/features/share/components/share_button";
+import ProfileOfferings from "@/features/offerings/components/profile_offerings";
+import { ENTITY_PAGE } from "@/content/pages/views/entity_page";
 
 interface BusinessPageProps {
   entityId: string;
@@ -72,9 +72,9 @@ const BusinessPage = ({ entityId }: BusinessPageProps) => {
   // We fetch preview-ready URLs from the dedicated media endpoint (same pattern as thoughts).
   const images: string[] = Array.isArray(galleryData?.slots)
     ? (galleryData!.slots
-        .map((s) => s.url)
+        .map((s: any) => s.url)
         .filter(
-          (u): u is string => typeof u === "string" && u.length > 0
+          (u: any): u is string => typeof u === "string" && u.length > 0
         ) as string[])
     : [];
 
@@ -87,13 +87,13 @@ const BusinessPage = ({ entityId }: BusinessPageProps) => {
 
         {isLoading ? (
           <div className="py-10 text-center text-muted-foreground">
-            Loading...
+            {ENTITY_PAGE.loading}
           </div>
         ) : null}
 
         {isError || !entity ? (
           <div className="py-10 text-center text-destructive">
-            Failed to load profile.
+            {ENTITY_PAGE.error}
           </div>
         ) : null}
 
@@ -119,7 +119,7 @@ const BusinessPage = ({ entityId }: BusinessPageProps) => {
 
             <div className="space-x-2 flex">
               <ProfilePills
-                title="Tags"
+                title={ENTITY_PAGE.sections.tags}
                 pills={tags}
                 className=" text-primary"
                 pillClassName="bg-primary-tint text-white"
@@ -128,7 +128,7 @@ const BusinessPage = ({ entityId }: BusinessPageProps) => {
                 <ProfileDetailsCard items={items} />
               </div>
               <ProfilePills
-                title="Vibes"
+                title={ENTITY_PAGE.sections.vibes}
                 pills={vibes}
                 className=" text-tertiary"
                 pillClassName="bg-tertiary-tint text-white"
@@ -137,7 +137,7 @@ const BusinessPage = ({ entityId }: BusinessPageProps) => {
 
             <div className="space-y-3 pt-2  justify-center w-full flex ">
               <EntityNavButton
-                label="Community"
+                label={ENTITY_PAGE.sections.community}
                 href={`/explore/entity_communities/${entity.entity_community_slug}`}
                 rightIcon
                 mainIcon={<MapIcon />}
@@ -154,11 +154,11 @@ const BusinessPage = ({ entityId }: BusinessPageProps) => {
               <ShareButton
                 destination={`/entities/${entityId}/${entityType}/profile`}
                 modalTitle={`Share ${entity.name}`}
-                label="Share"
+                label={ENTITY_PAGE.actions.share}
               />
             </div>
 
-            {user && userEntityId && !isOwnEntity ? (
+            {/* {user && userEntityId && !isOwnEntity ? (
               <>
                 <Button
                   onClick={() => setRequestPartnershipOpen(true)}
@@ -167,7 +167,7 @@ const BusinessPage = ({ entityId }: BusinessPageProps) => {
                 >
                   Request Partnership
                 </Button>
-                <RequestPartnershipModal
+                <RequestPartnershipModaL
                   inviterEntityId={userEntityId}
                   inviteeEntityId={entityId}
                   targetEntityName={entity.name}
@@ -175,7 +175,7 @@ const BusinessPage = ({ entityId }: BusinessPageProps) => {
                   onOpenChange={setRequestPartnershipOpen}
                 />
               </>
-            ) : null}
+            ) : null} */}
 
             <ProfileImagesGrid imageUrls={images} />
             <ProfileOfferings entityId={entityId} />

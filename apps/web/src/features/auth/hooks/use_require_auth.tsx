@@ -101,7 +101,7 @@ export function useRequireAuth(
   );
 
   return {
-    needsAuth: needsAuth || needsVerification || needsProfile,
+    needsAuth: needsAuth || needsVerification || needsProfile || true,
     showAuthWizard,
     setShowAuthWizard,
     requireAuth,

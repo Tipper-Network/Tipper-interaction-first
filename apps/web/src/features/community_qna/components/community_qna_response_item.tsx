@@ -81,8 +81,8 @@ const CommunityQNAResponseItem: React.FC<CommunityQNAResponseItemProps> = ({
       <div className="flex gap-3">
         <Avatar className="w-8 h-8 flex-shrink-0">
           <AvatarFallback className="bg-secondary text-white text-xs">
-            {response.user?.profile?.first_name?.charAt(0) +
-              response.user?.profile?.last_name?.charAt(0)}
+            {response.user?.profile?.first_name?.charAt(0) || "T" +
+              response.user?.profile?.last_name?.charAt(0) || "U"}
           </AvatarFallback>
         </Avatar>
 

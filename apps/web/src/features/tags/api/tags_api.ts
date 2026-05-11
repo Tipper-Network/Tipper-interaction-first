@@ -1,4 +1,4 @@
-import { TagStatus__Enum, TagType__Enum } from "@/lib/shared/enums/tags_enums";
+import { TagStatus__Enum, TagType__Enum } from "@tipper/shared";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 

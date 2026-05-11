@@ -1,9 +1,9 @@
-import { MediaType__Enum } from "@/lib/shared/enums/media_enums";
+import { MediaType__Enum } from "@tipper/shared";
 import {
   OfferingFormat__Enum,
   OfferingStatus__Enum,
   OfferingType__Enum,
-} from "@/lib/shared/enums/offering_enums";
+} from "@tipper/shared";
 
 export type OfferingMedia = {
   id: string;

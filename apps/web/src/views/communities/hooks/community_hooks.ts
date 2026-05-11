@@ -3,7 +3,7 @@ import {
   fetchCommunities,
   fetchCommunityDetails,
 } from "../api/communities_api";
-import { EntityCommunityStatus__Enum } from "@/lib/shared/enum_types";
+import { EntityCommunityStatus__Enum } from "@tipper/shared";
 const LIMIT = 10;
 
 interface UseInfiniteCommunitiesOptions {

@@ -11,7 +11,7 @@ export const CreateThoughtSchema = z
   })
   .refine(
     (data) => {
-      const hasDescription = data.description?.trim().length > 0;
+      const hasDescription = (data.description?.trim().length ?? 0) > 0;
       const hasFiles = data.files && data.files.length > 0;
       return hasDescription || hasFiles;
     },

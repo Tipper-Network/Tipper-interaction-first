@@ -4,7 +4,7 @@ import {
   OfferingStatus__Enum,
   OfferingFormat__Enum,
   OfferingType__Enum,
-} from "@/lib/shared/enums/offering_enums";
+} from "@tipper/shared";
 import React from "react";
 import { useCreateOffering } from "../../hooks/offerings_hooks";
 import { CreateOfferingInput } from "../../api/types";

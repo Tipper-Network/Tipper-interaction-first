@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { TagType__Enum } from "@/lib/shared/enums/tags_enums";
+import { TagType__Enum } from "@tipper/shared";
 import { useSuggestTag } from "@/features/tags/hooks/tags_hooks";
 import { toast } from "sonner";
 import { X } from "lucide-react";

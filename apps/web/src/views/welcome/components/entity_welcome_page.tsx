@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { WELCOME_PAGE } from "@/content/pages/views/welcome_page";
 import {
   Building2,
   Users,
@@ -46,7 +47,7 @@ export default function EntityWelcomePage({ entity }: EntityWelcomePageProps) {
 
     // Main entity profile - always available
     linkList.push({
-      label: "View Profile",
+      label: WELCOME_PAGE.links.viewProfile,
       href: `/explore/entities/${entityType}/${entity.slug}`,
 
       icon: Building2,
@@ -56,7 +57,7 @@ export default function EntityWelcomePage({ entity }: EntityWelcomePageProps) {
     // Community - if entity_community_slug exists
     if (entity.entity_community_slug) {
       linkList.push({
-        label: "Community",
+        label: WELCOME_PAGE.links.community,
         href: `/explore/entity_communities/${entity.entity_community_slug}`,
         icon: Users,
         available: true,
@@ -122,7 +123,7 @@ export default function EntityWelcomePage({ entity }: EntityWelcomePageProps) {
             {/* Welcome Text */}
             <div className="space-y-2 lg:space-y-3">
               <h1 className="text-3xl lg:text-5xl xl:text-6xl font-bold text-foreground">
-                Welcome to <span className="text-primary">{entity.name}</span>
+                {WELCOME_PAGE.heading} <span className="text-primary">{entity.name}</span>
               </h1>
               {entity.description && (
                 <p className="text-sm lg:text-lg text-muted-foreground max-w-md lg:max-w-2xl">
@@ -159,7 +160,7 @@ export default function EntityWelcomePage({ entity }: EntityWelcomePageProps) {
                       <ArrowRight className="h-5 w-5 lg:h-6 lg:w-6 text-primary-shade" />
                     ) : (
                       <span className="text-xs lg:text-sm text-muted-foreground">
-                        Coming soon
+                        {WELCOME_PAGE.comingSoon}
                       </span>
                     )}
                   </div>
@@ -175,7 +176,7 @@ export default function EntityWelcomePage({ entity }: EntityWelcomePageProps) {
         <div className="flex items-end gap-2 lg:gap-4 max-w-md lg:max-w-2xl">
           <Image
             src="/assets/mascots/Group.svg"
-            alt="Mascot"
+            alt={WELCOME_PAGE.mascotAlt}
             width={60}
             height={60}
             className="h-16 w-auto lg:h-24 lg:w-auto"

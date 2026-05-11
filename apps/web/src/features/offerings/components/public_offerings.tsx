@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { MediaType__Enum } from "@/lib/shared/enums/media_enums";
+import { MediaType__Enum } from "@tipper/shared";
 import PreviewComponent from "@/components/shared/preview_component";
 
 type PublicOfferingProps = {

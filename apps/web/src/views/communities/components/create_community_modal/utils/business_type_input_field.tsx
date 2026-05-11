@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { getBusinessTypes } from "@/features/entities/entity_types/businesses/api/business_api";
+import { getBusinessTypes } from "@/views/entities/entity_types/businesses/api/business_api";
 import { cn } from "@/lib/utils/utils";
 
 interface BusinessTypeInputProps {

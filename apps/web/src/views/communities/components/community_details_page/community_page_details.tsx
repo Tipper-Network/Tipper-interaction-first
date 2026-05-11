@@ -10,7 +10,6 @@ import {
   EntityType__Enum,
   RequestClaimStatus__Enum,
   } from "@tipper/shared";
-import { useEntityLogo } from "@/views/entities/shared/hooks/entities_media_hooks";
 import LogoViewComponent from "@/components/logo_view_component";
 import CommunityMetricsButton from "./communtiy_details_components/community_metrics_button";
 import { CommunityDisclaimer } from "./communtiy_details_components/community_disclaimer";

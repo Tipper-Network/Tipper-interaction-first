@@ -165,6 +165,27 @@ enum TicketStatus {
   DUPLICATE
 }
 
+enum InviteStatus {
+  PENDING
+  REGISTERED
+  JOINED
+}
+
+enum CommunityInviteVoteStatus {
+  PENDING_VOTE
+  APPROVED
+  REJECTED
+}
+
+enum UserInviteSource {
+  QR
+  EMAIL
+  SMS
+  WHATSAPP
+  TELEGRAM
+  OTHER
+}
+
 enum EntityCommunityMembershipStatus {
   PENDING
   ACTIVE
@@ -253,21 +274,6 @@ enum VisitSource {
   DIRECT_QR
   BROWSER
   PROMO_LINK
-}
-
-enum InviteStatus {
-  PENDING
-  REGISTERED
-  JOINED
-}
-
-enum UserInviteSource {
-  QR
-  EMAIL
-  SMS
-  WHATSAPP
-  TELEGRAM
-  OTHER
 }
 
 model EntityCommunity {
@@ -549,27 +555,28 @@ model PostComments {
 }
 
 model VoteBox {
-  id                     String                 @id() @default(uuid())
-  upvotes_count          Int                    @default(0)
-  downvotes_count        Int                    @default(0)
-  helpful_count          Int                    @default(0)
-  not_helpful_count      Int                    @default(0)
-  neutral_count          Int                    @default(0)
-  created_at             DateTime               @default(now())
-  updated_at             DateTime               @updatedAt()
-  votes                  Vote[]
-  post                   Post?
-  post_comment           PostComments?
-  community_qna          CommunityQNA?
-  community_qna_response CommunityQNAResponses?
-  group_chat             GroupChat?
-  group_chat_message     GroupChatMessages?
-  tag                    Tag?
-  thought                Thought?
-  thought_media          ThoughtMedia?
-  thought_comment        ThoughtComment?
-  feedback_ticket        FeedbackTicket?
-  feedback_comment       FeedbackComment?
+  id                      String                 @id() @default(uuid())
+  upvotes_count           Int                    @default(0)
+  downvotes_count         Int                    @default(0)
+  helpful_count           Int                    @default(0)
+  not_helpful_count       Int                    @default(0)
+  neutral_count           Int                    @default(0)
+  created_at              DateTime               @default(now())
+  updated_at              DateTime               @updatedAt()
+  votes                   Vote[]
+  post                    Post?
+  post_comment            PostComments?
+  community_qna           CommunityQNA?
+  community_qna_response  CommunityQNAResponses?
+  group_chat              GroupChat?
+  group_chat_message      GroupChatMessages?
+  tag                     Tag?
+  thought                 Thought?
+  thought_media           ThoughtMedia?
+  thought_comment         ThoughtComment?
+  feedback_ticket         FeedbackTicket?
+  feedback_comment        FeedbackComment?
+  entity_community_invite EntityCommunityInvite?
 }
 
 model Vote {
@@ -852,12 +859,56 @@ model FeedbackComment {
   updatedAt   DateTime       @updatedAt()
 }
 
-model Enterprise {
-  id         String   @id() @default(uuid())
-  name       String
-  created_at DateTime @default(now())
-  posts      Post[]
-  entities   Entity[]
+model UserInviteToken {
+  id         String       @id() @default(uuid())
+  user_id    String       @unique()
+  user       User         @relation(fields: [user_id], references: [id])
+  token      String       @unique()
+  invites    UserInvite[]
+  created_at DateTime     @default(now())
+  is_active  Boolean      @default(true)
+
+  @@index([user_id])
+}
+
+model UserInvite {
+  id                      String                 @id() @default(uuid())
+  token_id                String
+  token                   UserInviteToken        @relation(fields: [token_id], references: [id])
+  /// userId thats invited to Tipper through the community or other things.
+  invited_user_id         String?
+  invited_user            User?                  @relation("InvitedUser", fields: [invited_user_id], references: [id])
+  root_inviter_user_id    String
+  root_inviter_user       User                   @relation("RootInviter", fields: [root_inviter_user_id], references: [id])
+  status                  InviteStatus           @default(PENDING)
+  scanned_at              DateTime?
+  created_at              DateTime               @default(now())
+  entity_community_invite EntityCommunityInvite?
+  source                  UserInviteSource
+
+  @@index([token_id])
+  @@index([root_inviter_user_id])
+}
+
+model EntityCommunityInvite {
+  id                    String                    @id() @default(uuid())
+  invite_id             String                    @unique()
+  invite                UserInvite                @relation(fields: [invite_id], references: [id])
+  inviter_membership_id String
+  inviter_membership    EntityCommunityMember     @relation(fields: [inviter_membership_id], references: [id])
+  why_initiating        String
+  relationship_context  String
+  what_invitee_does     String?
+  why_invitee_wants_in  String?
+  vote_status           CommunityInviteVoteStatus @default(PENDING_VOTE)
+  vote_threshold        Int                       @default(3)
+  decided_at            DateTime?
+  vote_box_id           String?                   @unique()
+  vote_box              VoteBox?                  @relation(fields: [vote_box_id], references: [id])
+  resulting_membership  EntityCommunityMember?    @relation("InviteOrigin")
+
+  @@index([inviter_membership_id])
+  @@index([vote_status])
 }
 
 model EntityCommunityMember {
@@ -873,6 +924,8 @@ model EntityCommunityMember {
   user                             User                            @relation(fields: [user_id], references: [id], onDelete: Cascade)
   entity_community_member_position EntityCommunityMemberPosition[]
   entity_community_invites         EntityCommunityInvite[]
+  origin_invite_id                 String?                         @unique()
+  origin_invite                    EntityCommunityInvite?          @relation("InviteOrigin", fields: [origin_invite_id], references: [id])
 
   @@unique([entity_community_id, user_id])
   @@index([entity_community_id])
@@ -1136,43 +1189,12 @@ model ReferenceFeels {
   visits      UserCommunityVisit[]
 }
 
-model UserInviteToken {
-  id         String       @id() @default(uuid())
-  user_id    String       @unique()
-  user       User         @relation(fields: [user_id], references: [id])
-  token      String       @unique()
-  invites    UserInvite[]
-  created_at DateTime     @default(now())
-  is_active  Boolean      @default(true)
-
-  @@index([user_id])
-}
-
-model UserInvite {
-  id                      String                 @id() @default(uuid())
-  token_id                String
-  token                   UserInviteToken        @relation(fields: [token_id], references: [id])
-  /// userId thats invited to Tipper through the community or other things.
-  invited_user_id         String
-  invited_user            User                   @relation("InvitedUser", fields: [invited_user_id], references: [id])
-  root_inviter_user_id    String
-  root_inviter_user       User                   @relation("RootInviter", fields: [root_inviter_user_id], references: [id])
-  status                  InviteStatus           @default(PENDING)
-  scanned_at              DateTime?
-  created_at              DateTime               @default(now())
-  entity_community_invite EntityCommunityInvite?
-  source                  UserInviteSource
-
-  @@index([token_id])
-  @@index([root_inviter_user_id])
-}
-
-model EntityCommunityInvite {
-  id                    String                @id() @default(uuid())
-  invite_id             String                @unique()
-  invite                UserInvite            @relation(fields: [invite_id], references: [id])
-  inviter_membership_id String
-  inviter_membership    EntityCommunityMember @relation(fields: [inviter_membership_id], references: [id])
+model Enterprise {
+  id         String   @id() @default(uuid())
+  name       String
+  created_at DateTime @default(now())
+  posts      Post[]
+  entities   Entity[]
 }
 
 model Poll {

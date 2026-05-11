@@ -1,11 +1,18 @@
 import "user"
 import "membership"
 import "../entity_community/entity_community"
+import "../entity_community/votes"
 
 enum InviteStatus {
   PENDING
   REGISTERED
   JOINED
+}
+
+enum CommunityInviteVoteStatus {
+  PENDING_VOTE
+  APPROVED
+  REJECTED
 }
 enum UserInviteSource {
     QR
@@ -75,12 +82,30 @@ model EntityCommunityInvite {
   invite_id String @unique
   invite UserInvite @relation(fields: [invite_id], references: [id])
 
- // who are you inviting ?
-  // why are you inviting htem ? 
-  // what is the purpose of the invite ?
-  // what value do you think they will bring. 
-  // what value do you think they will get out of it 
-  
   inviter_membership_id String
   inviter_membership EntityCommunityMember @relation(fields: [inviter_membership_id], references: [id])
+
+  // Initiator's form — filled by the community member before generating the QR
+  why_initiating       String
+  relationship_context String
+
+  // Stranger's who form — filled on /i/[token] before authentication
+  what_invitee_does    String?
+  why_invitee_wants_in String?
+
+  // Community vote tracking
+  vote_status       CommunityInviteVoteStatus @default(PENDING_VOTE)
+  // Snapshot of the community's approval threshold at invite creation time.
+  // Frozen so that changing the community threshold later doesn't affect in-progress votes.
+  vote_threshold    Int @default(3)
+  decided_at        DateTime?
+
+  vote_box_id String? @unique
+  vote_box    VoteBox? @relation(fields: [vote_box_id], references: [id])
+
+  // Back-relation: the membership record created when this invite was approved
+  resulting_membership EntityCommunityMember? @relation("InviteOrigin")
+
+  @@index([inviter_membership_id])
+  @@index([vote_status])
 }

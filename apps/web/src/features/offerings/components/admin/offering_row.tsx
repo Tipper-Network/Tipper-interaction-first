@@ -6,7 +6,7 @@ import { useUploadOfferingMedia } from "../../hooks/offerings_hooks";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { OfferingType__Enum } from "@/lib/shared/enums/offering_enums";
+import { OfferingType__Enum } from "@tipper/shared";
 import Image from "next/image";
 import UploadMediaPreview from "@/components/shared/upload_media_preview";
 

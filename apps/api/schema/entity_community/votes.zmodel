@@ -6,6 +6,7 @@ import "../entity/entity"
 import "../entity/tag"
 import "thoughts"
 import "feedback"
+import "../user/invites"
 
 // Enum for all vote types
 enum VoteType {
@@ -47,8 +48,9 @@ model VoteBox {
     thought             Thought?
     thought_media       ThoughtMedia?
     thought_comment     ThoughtComment?
-    feedback_ticket     FeedbackTicket?
-    feedback_comment    FeedbackComment?
+    feedback_ticket           FeedbackTicket?
+    feedback_comment          FeedbackComment?
+    entity_community_invite   EntityCommunityInvite?
     // vibes             Vibes?
     // review     Review?  // Will be added when Review model is uncommented
 }

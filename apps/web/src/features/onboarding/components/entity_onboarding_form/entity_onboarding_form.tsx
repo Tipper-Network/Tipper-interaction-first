@@ -11,9 +11,9 @@ import { EntityType__Enum } from "@tipper/shared";
 import { useEntityDetails } from "@/views/entities/shared/hooks/entities_hooks";
 import { getEntityProfileUrl } from "@/views/entities/shared/utils/entity_routes";
 
-const selectedArchetypes = [];
-const selectedValues = [];
-const selectedInterests = [];
+const selectedArchetypes: string[] = [];
+const selectedValues: string[] = [];
+const selectedInterests: string[] = [];
 
 interface EntityOnboardingFormProps {
   entityId: string;

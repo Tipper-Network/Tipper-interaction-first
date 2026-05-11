@@ -18,9 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { updateEntityProfile } from "@/features/entities/shared/api/update_entitiy_api";
+import { updateEntityProfile } from "@/views/entities/shared/api/update_entitiy_api";
 import { toast } from "sonner";
-import { EntityType__Enum } from "@/lib/shared/enum_types";
+import { EntityType__Enum } from "@tipper/shared";
 import { useEntityLogo } from "../../hooks/entities_media_hooks";
 import LogoViewComponent from "@/components/logo_view_component";
 import {
@@ -30,7 +30,7 @@ import {
 } from "./entity_profile_setup_types";
 import ContactSection from "./sections/contact_section";
 import OwnerSection from "./sections/owner_section";
-import ScheduleSection from "./sections/schedule_section";
+import ScheduleSection from "./sections/schedule_section";    
 import LocationSection from "./sections/location_section";
 import { normalizeInstagramHandle } from "@/lib/utils/utils";
 import { useRouter } from "next/navigation";
@@ -308,7 +308,7 @@ const EntityProfileSetup = ({ entityId }: EntityProfileSetupProps) => {
                     ? entity.entity_type
                         .split("_")
                         .map(
-                          (word) =>
+                          (word: any) =>
                             word.charAt(0).toUpperCase() +
                             word.slice(1).toLowerCase()
                         )

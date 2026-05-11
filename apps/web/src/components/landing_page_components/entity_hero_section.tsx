@@ -4,22 +4,25 @@ import InitiateJourneyButton from "@/components/initiation_structures/initiate_j
 import ShareContainer from "./sub_sections/share_container";
 import Image from "next/image";
 import AnimatedActionButtons from "../initiation_structures/animated_action_buttons";
+import { LANDING } from "@/content/pages/views/landing";
 
 const EntityHeroSection = () => {
   return (
     <section className="w-full bg-white text-foreground rounded-2xl py-6 md:py-8">
       <div className=" mx-auto flex flex-col items-center text-center">
         <h1 className="text-2xl md:text-6xl font-bold tracking-tight leading-tight">
-          Forget the likes.
+          {LANDING.hero.headline}
           <br />
-          Focus on <span className="text-primary">Your </span> work
+          {LANDING.hero.focusPrefix}{" "}
+          <span className="text-primary">{LANDING.hero.focusHighlight} </span>
+          {LANDING.hero.focusSuffix}
         </h1>
 
         {/* Collage placeholder (swap with real assets as needed) */}
         <div className="relative w-full  ">
           <Image
             src="/hero_images.png"
-            alt="Tipper landing"
+            alt={LANDING.hero.heroImageAlt}
             width={1000}
             height={1000}
             className="w-full h-full object-cover"
@@ -32,7 +35,7 @@ const EntityHeroSection = () => {
               <div className=" w-20 md:w-36 lg:w-48 md:-mt-4 lg:-mt-6 ">
                 <Image
                   src="/assets/logos/Tipper_Logos_Primary_Ruby.svg"
-                  alt="Tipper"
+                  alt={LANDING.hero.logoAlt}
                   width={500}
                   height={500}
                   className=""
@@ -40,8 +43,9 @@ const EntityHeroSection = () => {
               </div>
             </div>
             <span className=" font-normal block  ">
-              Lets <span className="font-semibold">your Community</span> do all
-              the heavy lifting.
+              {LANDING.hero.taglinePrefix}{" "}
+              <span className="font-semibold">{LANDING.hero.taglineBold}</span>{" "}
+              {LANDING.hero.taglineSuffix}
             </span>
           </div>
 

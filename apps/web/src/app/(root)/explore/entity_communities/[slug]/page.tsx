@@ -1,9 +1,9 @@
-import CommunityPageMain from "@/features/communities/components/community_details_page/community_page_main";
-import { getCommunityIdBySlug } from "@/features/communities/api/communities_api";
+import CommunityPageMain from "@/views/communities/components/community_details_page/community_page_main";
+import { getCommunityIdBySlug } from "@/views/communities/api/communities_api";
 import ShareButton from "@/features/share/components/share_button";
 
 type PageProps = {
-  params: Promise<{ slug: string }>; // matches your [id] segment
+  params: Promise<{ slug: string }>; // m atches your [id] segment
 };
 
 const CommunityDetailPage = async ({ params }: PageProps) => {

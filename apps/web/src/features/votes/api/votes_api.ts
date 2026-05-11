@@ -1,4 +1,4 @@
-import { VoteType__Enum } from "@/lib/shared/enum_types";
+import { VoteType__Enum } from "@tipper/shared";
 
 type CastVoteParams = {
   voteBoxId: string;

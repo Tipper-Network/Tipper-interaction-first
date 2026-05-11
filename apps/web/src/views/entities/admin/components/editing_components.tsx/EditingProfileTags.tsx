@@ -11,11 +11,11 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils/utils";
-import { updateEntityTags } from "@/features/entities/shared/api/update_entitiy_api";
-import { TagStatus__Enum, TagType__Enum } from "@/lib/shared/enums/tags_enums";
+import { updateEntityTags } from "@/views/entities/shared/api/update_entitiy_api";
+import { TagStatus__Enum, TagType__Enum } from "@tipper/shared";
 import { useSuggestTag, useTags } from "@/features/tags/hooks/tags_hooks";
 import { X } from "lucide-react";
-import { ProfilePills } from "@/features/entities/shared/components/profile_components/profile_pills";
+import { ProfilePills } from "@/views/entities/shared/components/profile_components/profile_pills";
 import SuggestTag from "./suggest_tag";
 import { Input } from "@/components/ui/input";
 import { NeutralDialog } from "@/components/neutral_dialog";

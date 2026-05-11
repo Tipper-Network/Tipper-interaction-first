@@ -1,4 +1,4 @@
-import { VoteType__Enum } from "@/lib/shared/enum_types";
+import { VoteType__Enum } from "@tipper/shared";
 import { VoteWidget } from "./vote_widget";
 import { Minus, ThumbsDown, ThumbsUp } from "lucide-react";
 // import { HelpingHand } from "lucide-react";

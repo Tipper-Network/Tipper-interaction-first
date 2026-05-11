@@ -1,4 +1,4 @@
-import { EntityMediaRole__Enum } from "@/lib/shared/enums/media_enums";
+import { EntityMediaRole__Enum } from "@tipper/shared";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 

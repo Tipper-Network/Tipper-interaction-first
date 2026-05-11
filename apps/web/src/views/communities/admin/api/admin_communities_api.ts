@@ -1,4 +1,4 @@
-import { EntityCommunityStatus__Enum } from "@/lib/shared/enum_types";
+import { EntityCommunityStatus__Enum } from "@tipper/shared";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 

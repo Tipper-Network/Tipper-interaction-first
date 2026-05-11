@@ -4,7 +4,7 @@ import {
   getEntityLogo,
   updateEntityGallerySlot,
   updateEntityLogo,
-} from "@/features/entities/shared/api/entities_media_api";
+} from "@/views/entities/shared/api/entities_media_api";
 
 export function useEntityLogo(entityId: string) {
   return useQuery({

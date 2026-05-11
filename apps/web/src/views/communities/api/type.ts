@@ -1,4 +1,4 @@
-import { EntityCommunityStatus__Enum } from "@/lib/shared/enum_types";
+import { EntityCommunityStatus__Enum } from "@tipper/shared";
 export interface CreateEntityCommunityFromInvitationDto {
   name: string;
   description?: string;

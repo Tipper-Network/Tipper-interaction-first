@@ -1,13 +1,14 @@
 "use client";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
+import { ENTITY_COMMUNITY_PAGE } from "@/content/pages/views/entity_community_page";
 const CommunityGrid = dynamic(
-  () => import("@/features/communities/components/community_grid"),
+  () => import("@/views/communities/components/community_grid"),
   { ssr: false }
 );
 
-import { useInfiniteCommunities } from "@/features/communities/hooks/community_hooks";
-import { EntityCommunityStatus__Enum } from "@/lib/shared/enum_types";
+import { useInfiniteCommunities } from "@/views/communities/hooks/community_hooks";
+import { EntityCommunityStatus__Enum } from "@tipper/shared";
 import { useMemo } from "react";
 
 // import { EntityCommunityStatus__Enum } from "@/backend/src/utils/types/entity_community_enums";
@@ -46,7 +47,7 @@ const EntityCommunityPage = () => {
     return (
       <div className="flex items-center justify-center py-12">
         <p className="text-muted-foreground">
-          Loading Local Hub cummunities ...
+          {ENTITY_COMMUNITY_PAGE.loading}
         </p>
       </div>
     );
@@ -55,7 +56,7 @@ const EntityCommunityPage = () => {
   if (isError) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="text-destructive">Error loading Local Hub communities.</p>
+        <p className="text-destructive">{ENTITY_COMMUNITY_PAGE.error}</p>
       </div>
     );
   }
@@ -83,7 +84,7 @@ const EntityCommunityPage = () => {
           ) : (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
-                No local hubs and communities found.
+                {ENTITY_COMMUNITY_PAGE.empty}
               </p>
             </div>
           )}
@@ -99,8 +100,8 @@ const EntityCommunityPage = () => {
             className="w-full max-w-md"
           >
             {isFetchingNextPage
-              ? "Loading more..."
-              : "Load More Local Hub Communities"}
+              ? ENTITY_COMMUNITY_PAGE.loadingMore
+              : ENTITY_COMMUNITY_PAGE.loadMore}
           </Button>
         </div>
       )}

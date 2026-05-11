@@ -54,8 +54,8 @@ const CommunityQNAPreviewCard: React.FC<CommunityQNAPreviewCardProps> = ({
         <div className="flex items-center gap-3 mb-3">
           <Avatar className="w-9 h-9">
             <AvatarFallback className="bg-secondary text-white text-xs">
-              {communityQNA.user?.profile?.first_name?.charAt(0) +
-                communityQNA.user?.profile?.last_name?.charAt(0)}
+              {communityQNA?.user?.profile?.first_name?.charAt(0) || "T" +
+                communityQNA?.user?.profile?.last_name?.charAt(0) || "U"}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1">

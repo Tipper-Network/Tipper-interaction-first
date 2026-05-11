@@ -1,4 +1,4 @@
-import { ToolTipWrapper } from "@/components/tool_tip_wrapper";
+import { ToolTipWrapper } from "@/components/toolTip_Wrapper";
 import { Button } from "@/components/ui/button";
 import React from "react";
 

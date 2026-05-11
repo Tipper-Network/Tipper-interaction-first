@@ -1,6 +1,6 @@
 "use client";
 
-import { useInfiniteCommunities } from "@/features/communities/hooks/community_hooks";
+import { useInfiniteCommunities } from "@/views/communities/hooks/community_hooks";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
-import { EntityCommunityStatus__Enum } from "@/lib/shared/enum_types";
+import { EntityCommunityStatus__Enum } from "@tipper/shared";
 
 const AdminCommunityPage = () => {
   const [searchTerm, setSearchTerm] = useState("");

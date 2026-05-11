@@ -7,18 +7,18 @@ import {
   ProfileHeader,
   ProfileImagesGrid,
   ProfilePills,
-} from "@/features/entities/shared/components/profile_components";
-import { EntityNavButton } from "@/features/entities/shared/components/profile_components/entity_nav_button";
+} from "@/views/entities/shared/components/profile_components";
+import { EntityNavButton } from "@/views/entities/shared/components/profile_components/entity_nav_button";
 import {
   useEntityDetails,
   useUserEntityClaims,
-} from "@/features/entities/shared/hooks/entities_hooks";
-import { getEntityProfileDetailItems } from "@/features/entities/shared/utils/entity_items_resolver";
+} from "@/views/entities/shared/hooks/entities_hooks";
+import { getEntityProfileDetailItems } from "@/views/entities/shared/utils/entity_items_resolver";
 import AdminManageProfileView, {
   type AdminOfferingToggle,
-} from "@/features/entities/admin/components/admin_manage_profile_view";
+} from "@/views/entities/admin/components/admin_manage_profile_view";
 import { ChevronRight, Map, Handshake } from "lucide-react";
-import { useAdminViewStore } from "@/features/entities/admin/store/admin_view_store";
+import { useAdminViewStore } from "@/views/entities/admin/store/admin_view_store";
 import EditingProfileDetailsCard from "../components/editing_components.tsx/EditingProfileDetailsCard";
 import EditingProfileImagesGrid from "../components/editing_components.tsx/EditingProfileImagesGrid";
 import EditingProfileTags from "../components/editing_components.tsx/EditingProfileTags";

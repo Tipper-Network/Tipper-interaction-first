@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { useEntityDetails } from "@/features/entities/shared/hooks/entities_hooks";
+import { useEntityDetails } from "@/views/entities/shared/hooks/entities_hooks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import BackButton from "@/components/back_button";
@@ -26,8 +26,9 @@ import { DEFAULT_QR_STYLE, useQrCodeStore } from "../store/qr-code-store";
 import NavGuardModal from "@/components/navigation-guard/NavGuardModal";
 import UploadLogo, {
   type UploadLogoHandle,
-} from "../../entities/shared/components/entity_media/upload_logo";
-import { EntityMediaRole__Enum } from "@/lib/shared/enums/media_enums";
+} from "@/views/entities/shared/components/entity_media/upload_logo";
+import { EntityMediaRole__Enum } from "@tipper/shared";
+import { CornerDotType__Enum, CornerSquareType__Enum, DotType__Enum } from "@/styles/default-styles";
 
 const EntityQrCode = () => {
   const params = useParams();
@@ -70,11 +71,11 @@ const EntityQrCode = () => {
   const reset = useQrCodeStore((s) => s.reset);
   const hydrateFromBrand = useQrCodeStore((s) => s.hydrateFromBrand);
   const markSaved = useQrCodeStore((s) => s.markSaved);
-  const setDotsType = useQrCodeStore((s) => s.setDotsType);
+  const setDotsType = useQrCodeStore((s) => s.setDotsType) as (type: DotType__Enum) => void as any;
   const setDotsColor = useQrCodeStore((s) => s.setDotsColor);
-  const setCornersSquareType = useQrCodeStore((s) => s.setCornersSquareType);
+  const setCornersSquareType = useQrCodeStore((s) => s.setCornersSquareType) as (type: CornerSquareType__Enum) => void as any;
   const setCornersSquareColor = useQrCodeStore((s) => s.setCornersSquareColor);
-  const setCornersDotType = useQrCodeStore((s) => s.setCornersDotType);
+  const setCornersDotType = useQrCodeStore((s) => s.setCornersDotType) as (type: CornerDotType__Enum) => void as any;
   const setCornersDotColor = useQrCodeStore((s) => s.setCornersDotColor);
   const setBackgroundColor = useQrCodeStore((s) => s.setBackgroundColor);
 
@@ -169,7 +170,7 @@ const EntityQrCode = () => {
     );
   }
 
-  const logo_url = entity.entityMedia.find((media) => {
+  const logo_url = entity.entityMedia.find((media: any) => {
     if (media.role === EntityMediaRole__Enum.LOGO) return media.url;
   });
 

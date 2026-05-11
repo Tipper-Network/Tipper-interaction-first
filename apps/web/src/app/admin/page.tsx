@@ -31,7 +31,7 @@ const AdminPage = () => {
     approvalRate: 85, // TODO: replace with actual API call
   };
 
-  const recentActivities = [];
+  const recentActivities: any[] = [];
 
   return (
     <div className="space-y-6">

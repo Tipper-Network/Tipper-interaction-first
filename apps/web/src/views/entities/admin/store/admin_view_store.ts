@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import {
   updateEntityOfferingsPublic,
   updateEntityPublicProfileFlags,
-} from "@/features/entities/admin/api/entity_public_profile_api";
+} from "@/views/entities/admin/api/entity_public_profile_api";
 
 type OfferingDraft = {
   id: string;

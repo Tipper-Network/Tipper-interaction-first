@@ -8,7 +8,7 @@ const PollCard = ({
   onClick,
 }: {
   poll: any;
-  onClick: (poll) => void;
+  onClick: (poll: any) => void;
 }) => {
   const timeAgo = (date: string) => {
     try {
