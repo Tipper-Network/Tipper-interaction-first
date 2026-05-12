@@ -3,14 +3,14 @@ import "entity_community/entity_community"
 import "user/user"
 import "user/visits"
 
-// ONBOARDING REFERENCES user
+// ONBOARDING REFERENCES profile (junction tables on Profile)
 model ReferencePersonas {
     id                  String         @id @default(uuid())
     icon_url            String?
     persona_name        String         @unique
     persona_description String
 
-    users               UserPersonas[]
+    profile_personas    ProfilePersonas[]
 }
 
 model ReferenceValues {
@@ -18,7 +18,7 @@ model ReferenceValues {
     value_name        String       @unique
     value_description String
 
-    users             UserValues[]
+    profile_values    ProfileValues[]
 }
 
 model ReferenceInterests {
@@ -26,7 +26,7 @@ model ReferenceInterests {
     interest_name     String          @unique
     interest_category String
 
-    users             UserInterests[]
+    profile_interests ProfileInterests[]
 }
 
 // onboarding entity REFERENCES

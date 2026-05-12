@@ -8,7 +8,6 @@ import "../entity_community/community_qna"
 import "role"
 import "../entity_community/votes"
 import "../entity_community/thoughts"
-import "../entity/tag"
 import "../entity_community/feedback"
 import "../entity/claims"
 import "../user/membership"
@@ -22,36 +21,13 @@ model User {
   federated_identity_user Boolean                  @default(false)
   user_role               Role
   profile                 Profile?
-  polls                   Poll[]
-  poll_votes              PollVote[]
-  group_chat_member       GroupChatMembers[]
-  group_chat_messages     GroupChatMessages[]
   Email_verification_token  EmailVerificationToken[]
-  user_interests          UserInterests[]
-  user_values             UserValues[]
-  user_personas           UserPersonas[]
 
   user_claims             RequestClaim[]
-owned_entities          Entity[]
-  initiated_communities   EntityCommunity[]        @relation("CommunityInitiator")
-  feedback_tickets        FeedbackTicket[]
-  feedback_comments       FeedbackComment[]
-  ticket_status_changes    FeedbackTicketStatusHistory[] @relation("TicketStatusChanger")
-  //the things that have voting in them
-  votes                   Vote[]
-  // posts                   Post[]
-  post_comments           PostComments[]
-  community_qnas                    CommunityQNA[]
-  community_qna_responses           CommunityQNAResponses[]
-thought_comment   ThoughtComment[]
-	thought Thought[]
-  suggested_tags Tag[]
-  community_memberships   EntityCommunityMember[]
-  entity_members EntityMember[]
+  owned_entities          Entity[]
   user_invite_tokens UserInviteToken?
   root_invites UserInvite[] @relation("RootInviter")
   received_invites UserInvite[] @relation("InvitedUser")
-  community_visits UserCommunityVisit[]
  // partnership_memberships PartnershipMembership[]
 }
 
@@ -76,45 +52,74 @@ model Profile {
   user_id         String    @unique
   user            User      @relation(fields: [user_id], references: [id])
 
+  profile_personas   ProfilePersonas[]
+  profile_interests  ProfileInterests[]
+  profile_values     ProfileValues[]
+
+  entity_community_memberships      EntityCommunityMember[]
+  operational_affiliations          ProfileOperationalAffiliation[]
+  commercial_affiliations           ProfileCommercialAffiliation[]
+  strategic_affiliations            ProfileStrategicAffiliation[]
+
+  community_visits UserCommunityVisit[]
+
+  initiated_communities EntityCommunity[] @relation("CommunityInitiator")
+
+  votes                      Vote[]
+  poll_votes                 PollVote[] @relation("PollVotesByProfile")
+  polls_created              Poll[] @relation("PollCreator")
+  post_comments              PostComments[] @relation("PostCommentAuthor")
+  group_chat_memberships     GroupChatMembers[] @relation("GroupChatMembership")
+  group_chat_messages        GroupChatMessages[] @relation("GroupChatMessageAuthor")
+  thoughts                   Thought[] @relation("ThoughtAuthor")
+  thought_comments           ThoughtComment[] @relation("ThoughtCommentAuthor")
+  community_qnas             CommunityQNA[] @relation("CommunityQuestionAuthor")
+  community_qna_responses    CommunityQNAResponses[] @relation("CommunityQNAReplyAuthor")
+  feedback_tickets           FeedbackTicket[] @relation("FeedbackTicketAuthor")
+  feedback_comments          FeedbackComment[] @relation("FeedbackCommentAuthor")
+  feedback_status_changes    FeedbackTicketStatusHistory[] @relation("TicketStatusChanger")
+  suggested_tags_created     Tag[] @relation("ProfileSuggestedTags")
+
   @@index([user_id])
 }
 
-model UserPersonas {
-  id         String   @id @default(uuid())
-  user_id    String
-  persona_id String
+// Onboarding API contract: upsert Profile for the authenticated User first,
+// then create/update ProfilePersonas, ProfileValues, ProfileInterests by profile.id (never by user.id).
 
-  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  persona    ReferencePersonas @relation(fields: [persona_id], references: [id], onDelete: Cascade)
+model ProfilePersonas {
+  id          String   @id @default(uuid())
+  profile_id  String
+  persona_id  String
 
-  @@unique([user_id, persona_id])
-  @@index([user_id])
+  profile    Profile            @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  persona    ReferencePersonas  @relation(fields: [persona_id], references: [id], onDelete: Cascade)
+
+  @@unique([profile_id, persona_id])
+  @@index([profile_id])
 }
 
-
-model UserInterests {
-  id          String    @id @default(uuid())
-  user_id     String
+model ProfileInterests {
+  id          String   @id @default(uuid())
+  profile_id  String
   interest_id String
 
-  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  interests   ReferenceInterests @relation(fields: [interest_id], references: [id], onDelete: Cascade)
+  profile   Profile             @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  interests ReferenceInterests  @relation(fields: [interest_id], references: [id], onDelete: Cascade)
 
-  @@index([user_id])
-  @@unique([user_id, interest_id])
+  @@index([profile_id])
+  @@unique([profile_id, interest_id])
 }
 
+model ProfileValues {
+  id          String @id @default(uuid())
+  profile_id  String
+  value_id    String
 
-model UserValues {
-  id       String @id @default(uuid())
-  user_id  String
-  value_id String
+  profile Profile         @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  value   ReferenceValues @relation(fields: [value_id], references: [id], onDelete: Cascade)
 
-  user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  value    ReferenceValues @relation(fields: [value_id], references: [id], onDelete: Cascade)
-
-  @@unique([user_id, value_id])
-  @@index([user_id])
+  @@unique([profile_id, value_id])
+  @@index([profile_id])
 }
 
 

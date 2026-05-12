@@ -12,10 +12,10 @@ export default function BlogPage() {
           <Image
             src="/assets/logos/Tipper_Logos_Brandmark_Ruby.svg"
             alt="Tipper"
-            width={36}
-            height={36}
+            width={60}
+            height={60}
           />
-          <h1 className="text-3xl font-bold text-foreground">ipper Blog</h1>
+          <h1 className="text-3xl font-bold text-foreground">Tipper Articles.</h1>
         </div>
         <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
           {RESOURCES.intro}

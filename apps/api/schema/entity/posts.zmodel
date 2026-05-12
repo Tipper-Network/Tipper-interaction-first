@@ -61,8 +61,8 @@ pinned_until DateTime? // Entity Decision if the post is pinned to the top of th
   entity_id String
   entity Entity @relation(fields: [entity_id], references: [id])
  
-  entity_member_id String
-  entity_member EntityMember @relation(fields: [entity_member_id], references: [id])
+  profile_operational_affiliation_id String
+  profile_operational_affiliation ProfileOperationalAffiliation @relation(fields: [profile_operational_affiliation_id], references: [id])
 
   vote_box_id String @unique
   vote_box VoteBox? @relation(fields: [vote_box_id], references: [id])
@@ -71,7 +71,7 @@ published_by_enterprise_id String?
 published_by_enterprise Enterprise? @relation(fields: [published_by_enterprise_id], references: [id])
 
   @@index([entity_id])
-  @@index([entity_member_id])
+  @@index([profile_operational_affiliation_id])
   @@index([published_by_enterprise_id])
 }
 
@@ -105,8 +105,8 @@ model PostComments {
   post_id String
   post    Post   @relation(fields: [post_id], references: [id], onDelete: Cascade)
 
-  user_id String
-  user    User   @relation(fields: [user_id], references: [id])
+  profile_id String
+  profile    Profile @relation("PostCommentAuthor", fields: [profile_id], references: [id])
 
   content    String
   created_at DateTime @default(now())
@@ -116,7 +116,7 @@ model PostComments {
 
   @@unique([vote_box_id])
 
-  @@index([post_id, user_id])
-  @@index([user_id])
+  @@index([post_id, profile_id])
+  @@index([profile_id])
 }
 

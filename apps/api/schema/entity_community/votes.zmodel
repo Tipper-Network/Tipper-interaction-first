@@ -1,5 +1,4 @@
 import "../user/user"
-import "../entity/posts"
 import "../entity_community/community_qna"
 import "../entity_community/group_chats"
 import "../entity/entity"
@@ -64,15 +63,15 @@ model Vote {
     created_at  DateTime @default(now())
     updated_at  DateTime @updatedAt
 
-    user_id     String
-    user        User     @relation(fields: [user_id], references: [id])
-  
+    profile_id     String
+    profile        Profile @relation(fields: [profile_id], references: [id])
+
     vote_box_id String
     vote_box    VoteBox  @relation(fields: [vote_box_id], references: [id], onDelete: Cascade)
-    // Unique constraint: one vote per user per vote box
-    @@unique([user_id, vote_box_id])
-    @@index([vote_box_id, user_id])
-    @@index([user_id])
+
+    @@unique([profile_id, vote_box_id])
+    @@index([vote_box_id, profile_id])
+    @@index([profile_id])
 }
 
 

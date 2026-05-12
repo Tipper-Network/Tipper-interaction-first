@@ -6,7 +6,6 @@ import "../entity_community/polls"
 import "../entity_community/community_qna"
 import "../references"
 import "../entity_community/thoughts"
-import "../entity/claims"
 import "../entity_community/feedback"
 import "../user/membership"
 import "../user/invites"
@@ -42,8 +41,8 @@ model EntityCommunity {
   entity_id        String                  @unique 
   entity           Entity                  @relation("EntityCommunity", fields: [entity_id], references: [id], onDelete: Cascade)
   
-  initiated_by_user_id String?  
-  initiated_by         User?                @relation("CommunityInitiator", fields: [initiated_by_user_id], references: [id])
+  initiated_by_profile_id String?  
+  initiated_by            Profile?   @relation("CommunityInitiator", fields: [initiated_by_profile_id], references: [id])
   
   slug             String                     @unique
   description      String?                     

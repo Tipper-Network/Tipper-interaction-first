@@ -6,8 +6,8 @@ model Poll {
   community_id String
   community    EntityCommunity @relation(fields: [community_id], references: [id], onDelete: Cascade)
 
-  user_id String
-  user    User   @relation(fields: [user_id], references: [id])
+  profile_id String
+  profile    Profile @relation("PollCreator", fields: [profile_id], references: [id])
 
   poll_title String
   description String
@@ -30,13 +30,13 @@ model PollOption {
 
 model PollVote {
   id        String   @id @default(uuid())
-  user_id   String
+  profile_id String
   option_id String
   voted_at  DateTime @default(now())
 
   poll_option PollOption @relation(fields: [option_id], references: [id], onDelete: Cascade)
-  user        User       @relation(fields: [user_id], references: [id])
+  profile     Profile    @relation("PollVotesByProfile", fields: [profile_id], references: [id])
 
-  @@unique([user_id, option_id])
-  @@index([user_id])
+  @@unique([profile_id, option_id])
+  @@index([profile_id])
 }

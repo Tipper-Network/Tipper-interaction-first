@@ -33,8 +33,8 @@ model FeedbackTicket {
   community_id String
   community EntityCommunity @relation(fields: [community_id], references: [id])
   
-  author_id String
-  author User @relation(fields: [author_id], references: [id])
+  author_profile_id String
+  author      Profile @relation("FeedbackTicketAuthor", fields: [author_profile_id], references: [id])
   
   vote_box_id String @unique
   vote_box VoteBox @relation(fields: [vote_box_id], references: [id])
@@ -78,15 +78,15 @@ model FeedbackTicketStatusHistory {
   oldStatus TicketStatus? // null for initial creation
   newStatus TicketStatus
   
-  changedBy_id String
-  changedBy User @relation("TicketStatusChanger", fields: [changedBy_id], references: [id])
+  changedBy_profile_id String
+  changedBy Profile @relation("TicketStatusChanger", fields: [changedBy_profile_id], references: [id])
   
   note String? // Optional reason/comment for the change
   
   changedAt DateTime @default(now())
   
   @@index([ticket_id])
-  @@index([changedBy_id])
+  @@index([changedBy_profile_id])
 }
 
 
@@ -100,8 +100,8 @@ model FeedbackComment {
   vote_box_id String @unique
   vote_box VoteBox @relation(fields: [vote_box_id], references: [id])
 
-  author_id String
-  author User @relation(fields: [author_id], references: [id])
+  author_profile_id String
+  author    Profile @relation("FeedbackCommentAuthor", fields: [author_profile_id], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

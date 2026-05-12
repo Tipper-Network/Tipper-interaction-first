@@ -410,9 +410,6 @@ model User {
   group_chat_member        GroupChatMembers[]
   group_chat_messages      GroupChatMessages[]
   Email_verification_token EmailVerificationToken[]
-  user_interests           UserInterests[]
-  user_values              UserValues[]
-  user_personas            UserPersonas[]
   user_claims              RequestClaim[]
   owned_entities           Entity[]
   initiated_communities    EntityCommunity[]             @relation("CommunityInitiator")
@@ -435,56 +432,59 @@ model User {
 }
 
 model Profile {
-  id              String    @id() @default(uuid())
-  first_name      String    @default("")
-  last_name       String    @default("")
-  bio             String    @default("")
-  avatar_url      String    @default("")
-  location        String    @default("")
-  date_of_birth   DateTime?
-  interests_setup Boolean   @default(false)
-  profile_setup   Boolean   @default(false)
-  personas_setup  Boolean   @default(false)
-  values_setup    Boolean   @default(false)
-  reputation      Int       @default(0)
-  user_level      Int       @default(0)
-  user_id         String    @unique()
-  user            User      @relation(fields: [user_id], references: [id])
+  id                String             @id() @default(uuid())
+  first_name        String             @default("")
+  last_name         String             @default("")
+  bio               String             @default("")
+  avatar_url        String             @default("")
+  location          String             @default("")
+  date_of_birth     DateTime?
+  interests_setup   Boolean            @default(false)
+  profile_setup     Boolean            @default(false)
+  personas_setup    Boolean            @default(false)
+  values_setup      Boolean            @default(false)
+  reputation        Int                @default(0)
+  user_level        Int                @default(0)
+  user_id           String             @unique()
+  user              User               @relation(fields: [user_id], references: [id])
+  profile_personas  ProfilePersonas[]
+  profile_interests ProfileInterests[]
+  profile_values    ProfileValues[]
 
   @@index([user_id])
 }
 
-model UserPersonas {
+model ProfilePersonas {
   id         String            @id() @default(uuid())
-  user_id    String
+  profile_id String
   persona_id String
-  user       User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  profile    Profile           @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   persona    ReferencePersonas @relation(fields: [persona_id], references: [id], onDelete: Cascade)
 
-  @@unique([user_id, persona_id])
-  @@index([user_id])
+  @@unique([profile_id, persona_id])
+  @@index([profile_id])
 }
 
-model UserInterests {
+model ProfileInterests {
   id          String             @id() @default(uuid())
-  user_id     String
+  profile_id  String
   interest_id String
-  user        User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  profile     Profile            @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   interests   ReferenceInterests @relation(fields: [interest_id], references: [id], onDelete: Cascade)
 
-  @@unique([user_id, interest_id])
-  @@index([user_id])
+  @@unique([profile_id, interest_id])
+  @@index([profile_id])
 }
 
-model UserValues {
-  id       String          @id() @default(uuid())
-  user_id  String
-  value_id String
-  user     User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  value    ReferenceValues @relation(fields: [value_id], references: [id], onDelete: Cascade)
+model ProfileValues {
+  id         String          @id() @default(uuid())
+  profile_id String
+  value_id   String
+  profile    Profile         @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  value      ReferenceValues @relation(fields: [value_id], references: [id], onDelete: Cascade)
 
-  @@unique([user_id, value_id])
-  @@index([user_id])
+  @@unique([profile_id, value_id])
+  @@index([profile_id])
 }
 
 model EmailVerificationToken {
@@ -1119,25 +1119,25 @@ model UserCommunityVisit {
 }
 
 model ReferencePersonas {
-  id                  String         @id() @default(uuid())
+  id                  String            @id() @default(uuid())
   icon_url            String?
-  persona_name        String         @unique()
+  persona_name        String            @unique()
   persona_description String
-  users               UserPersonas[]
+  profile_personas    ProfilePersonas[]
 }
 
 model ReferenceValues {
-  id                String       @id() @default(uuid())
-  value_name        String       @unique()
+  id                String          @id() @default(uuid())
+  value_name        String          @unique()
   value_description String
-  users             UserValues[]
+  profile_values    ProfileValues[]
 }
 
 model ReferenceInterests {
-  id                String          @id() @default(uuid())
-  interest_name     String          @unique()
+  id                String             @id() @default(uuid())
+  interest_name     String             @unique()
   interest_category String
-  users             UserInterests[]
+  profile_interests ProfileInterests[]
 }
 
 model ReferenceEntityArchetypes {

@@ -7,7 +7,6 @@ import "../entity/posts"
 import "visits"
 import "invites"
 
-
 enum EntityCommunityMembershipStatus {
   PENDING
   ACTIVE
@@ -17,69 +16,68 @@ enum EntityCommunityMembershipStatus {
   REJECTED
 }
 
-// Level system: Using Int instead of enum for flexibility
-// Valid range: 1-10 (or higher in future)
-// Allows numeric comparisons (level >= 3) and easy expansion
-// since we are using the level suystem in the enbteitycommunity, we connect the entity communbity memebr table to the member stats table 
-// model EntityCommunityMemberStats {
-//   id String @id @default(uuid())
-//   entity_community_member_id String
-//   entity_community_member EntityCommunityMember @relation(fields: [entity_community_member_id], references: [id], onDelete: Cascade)
-//   level Int @default(0)
-//   xp Int @default(0)
-//   growth_metrics Json?
-// }
+/// Labour / ops-style affiliation with an entity (distinct from Subscriber table).
+enum OperationalRelationshipKind {
+  OPERATIONAL_STAFF
+  CONTRACTOR
+  VOLUNTEER
+  ADVISOR
+}
 
+enum CommercialRelationshipKind {
+  SUBSCRIBER
+  SPONSOR
+  AMBASSADOR
+}
+
+/// Partnership-adjacent + strategic counterparties at the person↔entity edge.
+enum StrategicRelationshipKind {
+  MEDIA_PARTNER
+  INVESTMENT_REPRESENTATIVE
+  VENDOR
+  PROJECT_COLLABORATOR
+  ALUMNI
+  APPLICANT
+  OTHER
+}
 
 model EntityCommunityMember {
   id String @id @default(uuid())
 
   status EntityCommunityMembershipStatus @default(PENDING)
 
-// to create a different page in the future 
-  visit_count Int @default(0)
+  visit_count   Int       @default(0)
   lastVisitedAt DateTime?
-  // visits EntityCommunityVisit[]
-  
-  joinedAt DateTime @default(now())
+  joinedAt      DateTime  @default(now())
+  member_level  Int       @default(1)
 
-  member_level Int @default(1) // Member level (1-10, can expand higher in future)
-
-  // EntityCommunityMembershipStructure EntityCommunityMembershipStructure[]
   entity_community_id String
-  entity_community EntityCommunity @relation(fields: [entity_community_id], references: [id] ,onDelete: Cascade)
+  entity_community    EntityCommunity @relation(fields: [entity_community_id], references: [id], onDelete: Cascade)
 
-  user_id String
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
- 
+  profile_id String
+  profile    Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
 
   entity_community_member_position EntityCommunityMemberPosition[]
   entity_community_invites         EntityCommunityInvite[]
 
-  // The invite that led to this membership — null for founding/admin members
   origin_invite_id String? @unique
   origin_invite    EntityCommunityInvite? @relation("InviteOrigin", fields: [origin_invite_id], references: [id])
 
   @@index([entity_community_id])
-  @@index([user_id])
-  @@unique([entity_community_id, user_id])
+  @@index([profile_id])
+  @@unique([entity_community_id, profile_id])
 }
 
-// FUTURE: EntityCommunityPosition - Level-based positions for communities
-// Positions will be tied to community levels (1-10+).
-// Communities must reach certain levels before they can assign specific positions to members.
-// Example: "Moderator" position might require community to be level 3+
 model EntityCommunityMemberPosition {
-  id String @id @default(uuid())
-
+  id        String @id @default(uuid())
   member_id String
-  member EntityCommunityMember @relation(fields: [member_id], references: [id], onDelete: Cascade)
+  member    EntityCommunityMember @relation(fields: [member_id], references: [id], onDelete: Cascade)
 
   position_id String
-  position EntityCommunityPosition @relation(fields: [position_id], references: [id], onDelete: Cascade)
+  position    EntityCommunityPosition @relation(fields: [position_id], references: [id], onDelete: Cascade)
 
-  assignedAt DateTime @default(now())
-  expiresAt DateTime?
+  assignedAt DateTime  @default(now())
+  expiresAt  DateTime?
 
   @@unique([member_id, position_id])
   @@index([member_id])
@@ -87,115 +85,175 @@ model EntityCommunityMemberPosition {
 }
 
 model EntityCommunityPosition {
-  id String @id @default(uuid())
+  id   String @id @default(uuid())
   name String
 
   entity_community_id String
-  entity_community EntityCommunity @relation(fields: [entity_community_id], references: [id], onDelete: Cascade)
-  
+  entity_community    EntityCommunity @relation(fields: [entity_community_id], references: [id], onDelete: Cascade)
+
   entity_community_member_position EntityCommunityMemberPosition[]
 
-  requiredLevel Int @default(1) // Minimum community level to unlock this position (1-10+)
-  hierarchy_level Int @default(1) // numeric (important!)
-  min_reputation Int @default(0)
-  governance_weight Int @default(0)
-  requiresApproval Boolean @default(false)
-  isStaffPosition Boolean @default(false)
+  requiredLevel       Int     @default(1)
+  hierarchy_level     Int     @default(1)
+  min_reputation      Int     @default(0)
+  governance_weight   Int     @default(0)
+  requiresApproval    Boolean @default(false)
+  isStaffPosition     Boolean @default(false)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  @@unique([entity_community_id, name]) // Prevent duplicate position names per community
+  @@unique([entity_community_id, name])
   @@index([entity_community_id])
 }
 
-
-// as fof the entity member table.
-// we have decided that there will be an 
-// model EntityMemberPosition {
-// handled in the role.zmodel file . // // //
-// }
-
-model EntityMember {
+/// One operational affiliation row per Profile per anchor EntityPosition (same rule as legacy EntityMember).
+model ProfileOperationalAffiliation {
   id String @id @default(uuid())
 
-  entity_member_position EntityMemberPosition[]
-  entity_member_position_id String
-  membership_tier String?        // FREE | PREMIUM | VIP
-  subscription_id String?
-  reputation_score Int @default(0)
-  isVerified Boolean @default(false)
-  expiresAt DateTime?
-  
-  user_id String
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  dominant_operational_kind OperationalRelationshipKind @default(OPERATIONAL_STAFF)
+
+  profile_id String
+  profile    Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+
   entity_id String
-  entity Entity @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  entity    Entity @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+
+  anchor_entity_position_id String
+  anchor_entity_position    EntityPosition @relation("OperationalAffiliationAnchor", fields: [anchor_entity_position_id], references: [id], onDelete: Cascade)
+
+  position_assignments ProfileOperationalAffiliationPosition[]
+
+  reputation_score Int     @default(0)
+  isVerified       Boolean @default(false)
+  expiresAt        DateTime?
+
   posts Post[]
-  @@unique([user_id, entity_member_position_id]) // Prevent duplicate memberships (user can't be in same position twice)
-  @@index([user_id])
-  @@index([entity_member_position_id])
+
+  @@unique([profile_id, anchor_entity_position_id])
+  @@index([profile_id])
+  @@index([entity_id])
+  @@index([entity_id, dominant_operational_kind])
 }
 
-model EntityMemberPosition {
+model ProfileOperationalAffiliationPosition {
   id String @id @default(uuid())
 
-  entity_member_id String
-  entityMember EntityMember @relation(fields: [entity_member_id], references: [id], onDelete: Cascade)
+  operational_affiliation_id String
+  operational_affiliation    ProfileOperationalAffiliation @relation(fields: [operational_affiliation_id], references: [id], onDelete: Cascade)
 
   entity_position_id String
-  entityPosition EntityPosition @relation(fields: [entity_position_id], references: [id], onDelete: Cascade)
+  entity_position    EntityPosition @relation(fields: [entity_position_id], references: [id], onDelete: Cascade)
 
-  assignedAt DateTime @default(now())
-  expiresAt DateTime?
+  assignedAt DateTime  @default(now())
+  expiresAt  DateTime?
 
-  @@unique([entity_member_id, entity_position_id])
+  @@unique([operational_affiliation_id, entity_position_id])
+  @@index([operational_affiliation_id])
 }
-model EntityPosition {
+
+model ProfileCommercialAffiliation {
   id String @id @default(uuid())
-  title String  // allows entities to create the names/positions they want for hteir people to promote culture within itself.
+
+  commercial_kind CommercialRelationshipKind
+
+  profile_id String
+  profile    Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+
   entity_id String
-  entity Entity @relation(fields: [entity_id], references: [id], onDelete: Cascade)
-  entity_members_positions EntityMemberPosition[]
-  // positionRules Json? // this is the rules for the position, it will be used to determine the permissions of the user in the entity.
+  entity    Entity @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+
+  anchor_entity_position_id String
+  anchor_entity_position    EntityPosition @relation("CommercialAffiliationAnchor", fields: [anchor_entity_position_id], references: [id], onDelete: Cascade)
+
+  position_assignments ProfileCommercialAffiliationPosition[]
+
+  membership_tier    String?
+  subscription_id    String?
+  reputation_score   Int       @default(0)
+  isVerified         Boolean   @default(false)
+  expiresAt          DateTime?
+
+  @@unique([profile_id, anchor_entity_position_id])
+  @@index([profile_id])
+  @@index([entity_id])
+  @@index([entity_id, commercial_kind])
+}
+
+model ProfileCommercialAffiliationPosition {
+  id String @id @default(uuid())
+
+  commercial_affiliation_id String
+  commercial_affiliation    ProfileCommercialAffiliation @relation(fields: [commercial_affiliation_id], references: [id], onDelete: Cascade)
+
+  entity_position_id String
+  entity_position    EntityPosition @relation(fields: [entity_position_id], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime  @default(now())
+  expiresAt  DateTime?
+
+  @@unique([commercial_affiliation_id, entity_position_id])
+  @@index([commercial_affiliation_id])
+}
+
+model ProfileStrategicAffiliation {
+  id String @id @default(uuid())
+
+  strategic_kind StrategicRelationshipKind @default(OTHER)
+
+  profile_id String
+  profile    Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+
+  entity_id String
+  entity    Entity @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+
+  anchor_entity_position_id String
+  anchor_entity_position    EntityPosition @relation("StrategicAffiliationAnchor", fields: [anchor_entity_position_id], references: [id], onDelete: Cascade)
+
+  position_assignments ProfileStrategicAffiliationPosition[]
+
+  reputation_score Int     @default(0)
+  isVerified       Boolean @default(false)
+  expiresAt        DateTime?
+
+  @@unique([profile_id, anchor_entity_position_id])
+  @@index([profile_id])
+  @@index([entity_id])
+  @@index([entity_id, strategic_kind])
+}
+
+model ProfileStrategicAffiliationPosition {
+  id String @id @default(uuid())
+
+  strategic_affiliation_id String
+  strategic_affiliation    ProfileStrategicAffiliation @relation(fields: [strategic_affiliation_id], references: [id], onDelete: Cascade)
+
+  entity_position_id String
+  entity_position    EntityPosition @relation(fields: [entity_position_id], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime  @default(now())
+  expiresAt  DateTime?
+
+  @@unique([strategic_affiliation_id, entity_position_id])
+  @@index([strategic_affiliation_id])
+}
+
+model EntityPosition {
+  id                         String                                  @id @default(uuid())
+  title                      String
+  entity_id                  String
+  entity                     Entity                                  @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+
+  operational_affiliation_anchor       ProfileOperationalAffiliation[]           @relation("OperationalAffiliationAnchor")
+  operational_assignment_rows          ProfileOperationalAffiliationPosition[]
+  commercial_affiliation_anchors       ProfileCommercialAffiliation[]            @relation("CommercialAffiliationAnchor")
+  commercial_assignment_rows         ProfileCommercialAffiliationPosition[]
+  strategic_affiliation_anchors       ProfileStrategicAffiliation[]            @relation("StrategicAffiliationAnchor")
+  strategic_assignment_rows          ProfileStrategicAffiliationPosition[]
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  
-  @@unique([entity_id, title]) // Prevent duplicate position names per entity
+
+  @@unique([entity_id, title])
   @@index([entity_id])
 }
-
-// model PartnershipMember {
-//   id String @id @default(uuid())
-//   partnership_id String
-//   partnership Partnership @relation(fields: [partnership_id], references: [id])
-//   attributes membershipAttribute[]
-//   user_id String
-
-
-
-// }
-
-
-
-//  ///// GOVERNANCE RULES  -  This is the rules for the entity community governance.
-
-// model EntityCommunityGovernanceRule {
-//   id String @id @default(uuid())
-
-//   entity_community_id String
-//   entityCommunity EntityCommunity @relation(fields: [entity_community_id], references: [id], onDelete: Cascade)
-
-//   ruleType String         // POSTING | EVENTS | VOTING | PARTNERSHIP
-//   config Json
-
-//   minCommunityLevel Int @default(1)
-
-//   createdAt DateTime @default(now())
-// }
-
-
-
-
-
-

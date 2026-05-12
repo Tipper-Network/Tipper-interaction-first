@@ -40,8 +40,8 @@ tagThought ThoughtTag[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  createdByUserId String?
-  createdByUser User? @relation(fields: [createdByUserId], references: [id])
+  created_by_profile_id String?
+  created_by_profile     Profile? @relation("ProfileSuggestedTags", fields: [created_by_profile_id], references: [id])
 }
 
 

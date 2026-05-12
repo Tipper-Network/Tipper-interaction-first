@@ -28,12 +28,13 @@ model Thought {
   community_id String
   community    EntityCommunity @relation(fields: [community_id], references: [id], onDelete: Cascade)
 
-  user_id String
-  user    User   @relation(fields: [user_id], references: [id])
+  profile_id String
+  profile    Profile @relation("ThoughtAuthor", fields: [profile_id], references: [id])
+
   @@unique([vote_box_id])
   @@index([community_id])
-  @@index([user_id])
-  @@index([community_id, user_id])
+  @@index([profile_id])
+  @@index([community_id, profile_id])
 }
 
 
@@ -62,8 +63,8 @@ model ThoughtComment {
   thought_id String
   thought    Thought   @relation(fields: [thought_id], references: [id], onDelete: Cascade)
 
-  user_id String
-  user    User   @relation(fields: [user_id], references: [id])
+  profile_id String
+  profile    Profile @relation("ThoughtCommentAuthor", fields: [profile_id], references: [id])
 
   content    String
   created_at DateTime @default(now())
@@ -73,7 +74,7 @@ model ThoughtComment {
 
   @@unique([vote_box_id])
 
-  @@index([thought_id, user_id])
-  @@index([user_id])
+  @@index([thought_id, profile_id])
+  @@index([profile_id])
 }
 

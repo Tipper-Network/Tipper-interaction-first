@@ -26,12 +26,12 @@ model GroupChatMembers {
   group_chat_id String
   group_chat    GroupChat @relation(fields: [group_chat_id], references: [id], onDelete: Cascade)
 
-  user_id String
-  user    User   @relation(fields: [user_id], references: [id])
+  profile_id String
+  profile    Profile @relation("GroupChatMembership", fields: [profile_id], references: [id])
 
   joined_at DateTime @default(now())
 
-  @@unique([group_chat_id, user_id])
+  @@unique([group_chat_id, profile_id])
   @@index([group_chat_id])
 }
 
@@ -40,8 +40,8 @@ model GroupChatMessages {
   group_chat_id String
   group_chat    GroupChat @relation(fields: [group_chat_id], references: [id], onDelete: Cascade)
 
-  user_id String
-  user    User   @relation(fields: [user_id], references: [id])
+  profile_id String
+  profile    Profile @relation("GroupChatMessageAuthor", fields: [profile_id], references: [id])
 
   user_name String   @default("unknown")
   content   String
@@ -52,6 +52,6 @@ model GroupChatMessages {
 
   @@unique([vote_box_id])
 
-  @@index([user_id, group_chat_id])
+  @@index([profile_id, group_chat_id])
   @@index([group_chat_id])
 }

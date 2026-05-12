@@ -88,7 +88,9 @@ model Entity {
   entity_archetypes  EntityArchetypesEntries[]
 
   entity_positions EntityPosition[]
-  entity_members EntityMember[]
+  operational_affiliations ProfileOperationalAffiliation[]
+  commercial_affiliations  ProfileCommercialAffiliation[]
+  strategic_affiliations   ProfileStrategicAffiliation[]
   
   sent_partnership_invitations       PartnershipInvitation[] @relation("InviterEntityInvitations")
   received_partnership_invitations   PartnershipInvitation[] @relation("InviteeEntityInvitations")
