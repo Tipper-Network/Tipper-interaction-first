@@ -5,12 +5,12 @@ import { Separator } from "@/components/ui/separator";
 import React, { useState } from "react";
 
 interface Faq {
-  question: string;
-  answer: string;
+  readonly question: string;
+  readonly answer: string;
 }
 
 interface FaqsComponentProps {
-  faqs: Faq[];
+  readonly faqs: readonly Faq[];
 }
 
 export default function FaqsComponent({ faqs }: FaqsComponentProps) {

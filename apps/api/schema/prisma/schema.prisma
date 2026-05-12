@@ -195,6 +195,31 @@ enum EntityCommunityMembershipStatus {
   REJECTED
 }
 
+/// Labour / ops-style affiliation with an entity (distinct from Subscriber table).
+enum OperationalRelationshipKind {
+  OPERATIONAL_STAFF
+  CONTRACTOR
+  VOLUNTEER
+  ADVISOR
+}
+
+enum CommercialRelationshipKind {
+  SUBSCRIBER
+  SPONSOR
+  AMBASSADOR
+}
+
+/// Partnership-adjacent + strategic counterparties at the person↔entity edge.
+enum StrategicRelationshipKind {
+  MEDIA_PARTNER
+  INVESTMENT_REPRESENTATIVE
+  VENDOR
+  PROJECT_COLLABORATOR
+  ALUMNI
+  APPLICANT
+  OTHER
+}
+
 enum Role {
   USER
   VERIFIED
@@ -282,8 +307,8 @@ model EntityCommunity {
   community_level            Int                       @default(1)
   entity_id                  String                    @unique()
   entity                     Entity                    @relation("EntityCommunity", fields: [entity_id], references: [id], onDelete: Cascade)
-  initiated_by_user_id       String?
-  initiated_by               User?                     @relation("CommunityInitiator", fields: [initiated_by_user_id], references: [id])
+  initiated_by_profile_id    String?
+  initiated_by               Profile?                  @relation("CommunityInitiator", fields: [initiated_by_profile_id], references: [id])
   slug                       String                    @unique()
   description                String?
   users_count                Int                       @default(0)
@@ -307,43 +332,45 @@ model EntityCommunity {
 }
 
 model Entity {
-  id                               String                    @id() @default(uuid())
+  id                               String                          @id() @default(uuid())
   name                             String
-  slug                             String                    @unique()
-  entity_type                      EntityType                @default(BUSINESS)
+  slug                             String                          @unique()
+  entity_type                      EntityType                      @default(BUSINESS)
   description                      String?
   phone                            String?
   email                            String?
   instagram_url                    String?
   owner_phone_number               String?
   owner_id                         String?
-  owner                            User?                     @relation(fields: [owner_id], references: [id])
+  owner                            User?                           @relation(fields: [owner_id], references: [id])
   longitude                        Float?
   latitude                         Float?
   accuracy                         Float?
-  operates_online                  Boolean                   @default(false)
+  operates_online                  Boolean                         @default(false)
   metadata                         Json?
   address                          Json?
   schedule                         Json?
-  entity_status                    EntityStatus              @default(UNCLAIMED)
-  entity_community                 EntityCommunity?          @relation("EntityCommunity")
+  entity_status                    EntityStatus                    @default(UNCLAIMED)
+  entity_community                 EntityCommunity?                @relation("EntityCommunity")
   request_claims                   RequestClaim[]
   entity_interests                 EntityInterestsEntries[]
   entity_values                    EntityValuesEntries[]
   entity_archetypes                EntityArchetypesEntries[]
   entity_positions                 EntityPosition[]
-  entity_members                   EntityMember[]
-  sent_partnership_invitations     PartnershipInvitation[]   @relation("InviterEntityInvitations")
-  received_partnership_invitations PartnershipInvitation[]   @relation("InviteeEntityInvitations")
-  partnerships_as_a                Partnership[]             @relation("PartnershipEntityA")
-  partnerships_as_b                Partnership[]             @relation("PartnershipEntityB")
+  operational_affiliations         ProfileOperationalAffiliation[]
+  commercial_affiliations          ProfileCommercialAffiliation[]
+  strategic_affiliations           ProfileStrategicAffiliation[]
+  sent_partnership_invitations     PartnershipInvitation[]         @relation("InviterEntityInvitations")
+  received_partnership_invitations PartnershipInvitation[]         @relation("InviteeEntityInvitations")
+  partnerships_as_a                Partnership[]                   @relation("PartnershipEntityA")
+  partnerships_as_b                Partnership[]                   @relation("PartnershipEntityB")
   offerings                        Offering[]
   brand                            Brand?
   entity_media                     EntityMedia[]
   tags                             EntityTag[]
   posts                            Post[]
   enterprise_id                    String?
-  enterprise                       Enterprise?               @relation(fields: [enterprise_id], references: [id])
+  enterprise                       Enterprise?                     @relation(fields: [enterprise_id], references: [id])
 
   @@index([slug, instagram_url, email, phone])
 }
@@ -398,58 +425,60 @@ model EntityArchetypesEntries {
 }
 
 model User {
-  id                       String                        @id() @default(uuid())
-  email                    String                        @unique()
-  email_verified           Boolean                       @default(false)
+  id                       String                   @id() @default(uuid())
+  email                    String                   @unique()
+  email_verified           Boolean                  @default(false)
   password                 String?
-  federated_identity_user  Boolean                       @default(false)
+  federated_identity_user  Boolean                  @default(false)
   user_role                Role
   profile                  Profile?
-  polls                    Poll[]
-  poll_votes               PollVote[]
-  group_chat_member        GroupChatMembers[]
-  group_chat_messages      GroupChatMessages[]
   Email_verification_token EmailVerificationToken[]
   user_claims              RequestClaim[]
   owned_entities           Entity[]
-  initiated_communities    EntityCommunity[]             @relation("CommunityInitiator")
-  feedback_tickets         FeedbackTicket[]
-  feedback_comments        FeedbackComment[]
-  ticket_status_changes    FeedbackTicketStatusHistory[] @relation("TicketStatusChanger")
-  votes                    Vote[]
-  post_comments            PostComments[]
-  community_qnas           CommunityQNA[]
-  community_qna_responses  CommunityQNAResponses[]
-  thought_comment          ThoughtComment[]
-  thought                  Thought[]
-  suggested_tags           Tag[]
-  community_memberships    EntityCommunityMember[]
-  entity_members           EntityMember[]
   user_invite_tokens       UserInviteToken?
-  root_invites             UserInvite[]                  @relation("RootInviter")
-  received_invites         UserInvite[]                  @relation("InvitedUser")
-  community_visits         UserCommunityVisit[]
+  root_invites             UserInvite[]             @relation("RootInviter")
+  received_invites         UserInvite[]             @relation("InvitedUser")
 }
 
 model Profile {
-  id                String             @id() @default(uuid())
-  first_name        String             @default("")
-  last_name         String             @default("")
-  bio               String             @default("")
-  avatar_url        String             @default("")
-  location          String             @default("")
-  date_of_birth     DateTime?
-  interests_setup   Boolean            @default(false)
-  profile_setup     Boolean            @default(false)
-  personas_setup    Boolean            @default(false)
-  values_setup      Boolean            @default(false)
-  reputation        Int                @default(0)
-  user_level        Int                @default(0)
-  user_id           String             @unique()
-  user              User               @relation(fields: [user_id], references: [id])
-  profile_personas  ProfilePersonas[]
-  profile_interests ProfileInterests[]
-  profile_values    ProfileValues[]
+  id                           String                          @id() @default(uuid())
+  first_name                   String                          @default("")
+  last_name                    String                          @default("")
+  bio                          String                          @default("")
+  avatar_url                   String                          @default("")
+  location                     String                          @default("")
+  date_of_birth                DateTime?
+  interests_setup              Boolean                         @default(false)
+  profile_setup                Boolean                         @default(false)
+  personas_setup               Boolean                         @default(false)
+  values_setup                 Boolean                         @default(false)
+  reputation                   Int                             @default(0)
+  user_level                   Int                             @default(0)
+  user_id                      String                          @unique()
+  user                         User                            @relation(fields: [user_id], references: [id])
+  profile_personas             ProfilePersonas[]
+  profile_interests            ProfileInterests[]
+  profile_values               ProfileValues[]
+  entity_community_memberships EntityCommunityMember[]
+  operational_affiliations     ProfileOperationalAffiliation[]
+  commercial_affiliations      ProfileCommercialAffiliation[]
+  strategic_affiliations       ProfileStrategicAffiliation[]
+  community_visits             UserCommunityVisit[]
+  initiated_communities        EntityCommunity[]               @relation("CommunityInitiator")
+  votes                        Vote[]
+  poll_votes                   PollVote[]                      @relation("PollVotesByProfile")
+  polls_created                Poll[]                          @relation("PollCreator")
+  post_comments                PostComments[]                  @relation("PostCommentAuthor")
+  group_chat_memberships       GroupChatMembers[]              @relation("GroupChatMembership")
+  group_chat_messages          GroupChatMessages[]             @relation("GroupChatMessageAuthor")
+  thoughts                     Thought[]                       @relation("ThoughtAuthor")
+  thought_comments             ThoughtComment[]                @relation("ThoughtCommentAuthor")
+  community_qnas               CommunityQNA[]                  @relation("CommunityQuestionAuthor")
+  community_qna_responses      CommunityQNAResponses[]         @relation("CommunityQNAReplyAuthor")
+  feedback_tickets             FeedbackTicket[]                @relation("FeedbackTicketAuthor")
+  feedback_comments            FeedbackComment[]               @relation("FeedbackCommentAuthor")
+  feedback_status_changes      FeedbackTicketStatusHistory[]   @relation("TicketStatusChanger")
+  suggested_tags_created       Tag[]                           @relation("ProfileSuggestedTags")
 
   @@index([user_id])
 }
@@ -500,30 +529,30 @@ model EmailVerificationToken {
 }
 
 model Post {
-  id                         String         @id() @default(uuid())
-  description                String
-  type                       PostType
-  visibility                 PostTarget     @default(ALL)
-  status                     PostStatus     @default(PUBLISHED)
-  created_at                 DateTime       @default(now())
-  expires_at                 DateTime?
-  comments_count             Int            @default(0)
+  id                                 String                        @id() @default(uuid())
+  description                        String
+  type                               PostType
+  visibility                         PostTarget                    @default(ALL)
+  status                             PostStatus                    @default(PUBLISHED)
+  created_at                         DateTime                      @default(now())
+  expires_at                         DateTime?
+  comments_count                     Int                           @default(0)
   /////////// Enterprise Decisions ///////////
-  boosted_until              DateTime?
-  pinned_until               DateTime?
-  comments                   PostComments[]
-  media                      PostMedia[]
-  entity_id                  String
-  entity                     Entity         @relation(fields: [entity_id], references: [id])
-  entity_member_id           String
-  entity_member              EntityMember   @relation(fields: [entity_member_id], references: [id])
-  vote_box_id                String         @unique()
-  vote_box                   VoteBox?       @relation(fields: [vote_box_id], references: [id])
-  published_by_enterprise_id String?
-  published_by_enterprise    Enterprise?    @relation(fields: [published_by_enterprise_id], references: [id])
+  boosted_until                      DateTime?
+  pinned_until                       DateTime?
+  comments                           PostComments[]
+  media                              PostMedia[]
+  entity_id                          String
+  entity                             Entity                        @relation(fields: [entity_id], references: [id])
+  profile_operational_affiliation_id String
+  profile_operational_affiliation    ProfileOperationalAffiliation @relation(fields: [profile_operational_affiliation_id], references: [id])
+  vote_box_id                        String                        @unique()
+  vote_box                           VoteBox?                      @relation(fields: [vote_box_id], references: [id])
+  published_by_enterprise_id         String?
+  published_by_enterprise            Enterprise?                   @relation(fields: [published_by_enterprise_id], references: [id])
 
   @@index([entity_id])
-  @@index([entity_member_id])
+  @@index([profile_operational_affiliation_id])
   @@index([published_by_enterprise_id])
 }
 
@@ -542,16 +571,16 @@ model PostComments {
   id          String   @id() @default(uuid())
   post_id     String
   post        Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
-  user_id     String
-  user        User     @relation(fields: [user_id], references: [id])
+  profile_id  String
+  profile     Profile  @relation("PostCommentAuthor", fields: [profile_id], references: [id])
   content     String
   created_at  DateTime @default(now())
   vote_box_id String?
   vote_box    VoteBox? @relation(fields: [vote_box_id], references: [id])
 
   @@unique([vote_box_id])
-  @@index([post_id, user_id])
-  @@index([user_id])
+  @@index([post_id, profile_id])
+  @@index([profile_id])
 }
 
 model VoteBox {
@@ -584,14 +613,14 @@ model Vote {
   vote_type   VoteType
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt()
-  user_id     String
-  user        User     @relation(fields: [user_id], references: [id])
+  profile_id  String
+  profile     Profile  @relation(fields: [profile_id], references: [id])
   vote_box_id String
   vote_box    VoteBox  @relation(fields: [vote_box_id], references: [id], onDelete: Cascade)
 
-  @@unique([user_id, vote_box_id])
-  @@index([vote_box_id, user_id])
-  @@index([user_id])
+  @@unique([profile_id, vote_box_id])
+  @@index([vote_box_id, profile_id])
+  @@index([profile_id])
 }
 
 model CommunityQNA {
@@ -601,8 +630,8 @@ model CommunityQNA {
   created_at              DateTime                @default(now())
   updated_at              DateTime                @updatedAt()
   responses_count         Int                     @default(0)
-  user_id                 String
-  user                    User                    @relation(fields: [user_id], references: [id])
+  profile_id              String
+  profile                 Profile                 @relation("CommunityQuestionAuthor", fields: [profile_id], references: [id])
   community_qna_responses CommunityQNAResponses[]
   vote_box_id             String?
   vote_box                VoteBox?                @relation(fields: [vote_box_id], references: [id])
@@ -610,7 +639,7 @@ model CommunityQNA {
   community               EntityCommunity         @relation(fields: [community_id], references: [id])
 
   @@unique([vote_box_id])
-  @@index([community_id, user_id])
+  @@index([community_id, profile_id])
 }
 
 model CommunityQNAResponses {
@@ -624,8 +653,8 @@ model CommunityQNAResponses {
   response           String
   created_at         DateTime                @default(now())
   updated_at         DateTime                @updatedAt()
-  user_id            String
-  user               User                    @relation(fields: [user_id], references: [id])
+  profile_id         String
+  profile            Profile                 @relation("CommunityQNAReplyAuthor", fields: [profile_id], references: [id])
   vote_box_id        String?
   vote_box           VoteBox?                @relation(fields: [vote_box_id], references: [id])
 
@@ -653,11 +682,11 @@ model GroupChatMembers {
   id            String    @id() @default(uuid())
   group_chat_id String
   group_chat    GroupChat @relation(fields: [group_chat_id], references: [id], onDelete: Cascade)
-  user_id       String
-  user          User      @relation(fields: [user_id], references: [id])
+  profile_id    String
+  profile       Profile   @relation("GroupChatMembership", fields: [profile_id], references: [id])
   joined_at     DateTime  @default(now())
 
-  @@unique([group_chat_id, user_id])
+  @@unique([group_chat_id, profile_id])
   @@index([group_chat_id])
 }
 
@@ -665,8 +694,8 @@ model GroupChatMessages {
   id            String    @id() @default(uuid())
   group_chat_id String
   group_chat    GroupChat @relation(fields: [group_chat_id], references: [id], onDelete: Cascade)
-  user_id       String
-  user          User      @relation(fields: [user_id], references: [id])
+  profile_id    String
+  profile       Profile   @relation("GroupChatMessageAuthor", fields: [profile_id], references: [id])
   user_name     String    @default("unknown")
   content       String
   sent_at       DateTime  @default(now())
@@ -674,25 +703,25 @@ model GroupChatMessages {
   vote_box      VoteBox?  @relation(fields: [vote_box_id], references: [id])
 
   @@unique([vote_box_id])
-  @@index([user_id, group_chat_id])
+  @@index([profile_id, group_chat_id])
   @@index([group_chat_id])
 }
 
 model Tag {
-  id              String        @id() @default(uuid())
-  slug            String        @unique()
-  label           String
-  type            TagType
-  status          TagStatus
-  tagEntity       EntityTag[]
-  tagOffering     OfferingTag[]
-  tagThought      ThoughtTag[]
-  vote_box_id     String?       @unique()
-  vote_box        VoteBox?      @relation(fields: [vote_box_id], references: [id])
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt()
-  createdByUserId String?
-  createdByUser   User?         @relation(fields: [createdByUserId], references: [id])
+  id                    String        @id() @default(uuid())
+  slug                  String        @unique()
+  label                 String
+  type                  TagType
+  status                TagStatus
+  tagEntity             EntityTag[]
+  tagOffering           OfferingTag[]
+  tagThought            ThoughtTag[]
+  vote_box_id           String?       @unique()
+  vote_box              VoteBox?      @relation(fields: [vote_box_id], references: [id])
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt()
+  created_by_profile_id String?
+  created_by_profile    Profile?      @relation("ProfileSuggestedTags", fields: [created_by_profile_id], references: [id])
 }
 
 model EntityTag {
@@ -769,13 +798,13 @@ model Thought {
   vote_box       VoteBox?         @relation(fields: [vote_box_id], references: [id])
   community_id   String
   community      EntityCommunity  @relation(fields: [community_id], references: [id], onDelete: Cascade)
-  user_id        String
-  user           User             @relation(fields: [user_id], references: [id])
+  profile_id     String
+  profile        Profile          @relation("ThoughtAuthor", fields: [profile_id], references: [id])
 
   @@unique([vote_box_id])
   @@index([community_id])
-  @@index([user_id])
-  @@index([community_id, user_id])
+  @@index([profile_id])
+  @@index([community_id, profile_id])
 }
 
 model ThoughtMedia {
@@ -796,67 +825,67 @@ model ThoughtComment {
   id          String   @id() @default(uuid())
   thought_id  String
   thought     Thought  @relation(fields: [thought_id], references: [id], onDelete: Cascade)
-  user_id     String
-  user        User     @relation(fields: [user_id], references: [id])
+  profile_id  String
+  profile     Profile  @relation("ThoughtCommentAuthor", fields: [profile_id], references: [id])
   content     String
   created_at  DateTime @default(now())
   vote_box_id String?
   vote_box    VoteBox? @relation(fields: [vote_box_id], references: [id])
 
   @@unique([vote_box_id])
-  @@index([thought_id, user_id])
-  @@index([user_id])
+  @@index([thought_id, profile_id])
+  @@index([profile_id])
 }
 
 model FeedbackTicket {
-  id             String                        @id() @default(uuid())
-  title          String
-  description    String
-  community_id   String
-  community      EntityCommunity               @relation(fields: [community_id], references: [id])
-  author_id      String
-  author         User                          @relation(fields: [author_id], references: [id])
-  vote_box_id    String                        @unique()
-  vote_box       VoteBox                       @relation(fields: [vote_box_id], references: [id])
-  status         TicketStatus
-  type           TicketType
-  priority       Int?
-  isArchived     Boolean                       @default(false)
-  duplicateOf_id String?
-  duplicateOf    FeedbackTicket?               @relation("TicketDuplicates", fields: [duplicateOf_id], references: [id])
-  duplicates     FeedbackTicket[]              @relation("TicketDuplicates")
-  comments       FeedbackComment[]
-  statusHistory  FeedbackTicketStatusHistory[]
-  createdAt      DateTime                      @default(now())
-  updatedAt      DateTime                      @updatedAt()
+  id                String                        @id() @default(uuid())
+  title             String
+  description       String
+  community_id      String
+  community         EntityCommunity               @relation(fields: [community_id], references: [id])
+  author_profile_id String
+  author            Profile                       @relation("FeedbackTicketAuthor", fields: [author_profile_id], references: [id])
+  vote_box_id       String                        @unique()
+  vote_box          VoteBox                       @relation(fields: [vote_box_id], references: [id])
+  status            TicketStatus
+  type              TicketType
+  priority          Int?
+  isArchived        Boolean                       @default(false)
+  duplicateOf_id    String?
+  duplicateOf       FeedbackTicket?               @relation("TicketDuplicates", fields: [duplicateOf_id], references: [id])
+  duplicates        FeedbackTicket[]              @relation("TicketDuplicates")
+  comments          FeedbackComment[]
+  statusHistory     FeedbackTicketStatusHistory[]
+  createdAt         DateTime                      @default(now())
+  updatedAt         DateTime                      @updatedAt()
 }
 
 model FeedbackTicketStatusHistory {
-  id           String         @id() @default(uuid())
-  ticket_id    String
-  ticket       FeedbackTicket @relation(fields: [ticket_id], references: [id], onDelete: Cascade)
-  oldStatus    TicketStatus?
-  newStatus    TicketStatus
-  changedBy_id String
-  changedBy    User           @relation("TicketStatusChanger", fields: [changedBy_id], references: [id])
-  note         String?
-  changedAt    DateTime       @default(now())
+  id                   String         @id() @default(uuid())
+  ticket_id            String
+  ticket               FeedbackTicket @relation(fields: [ticket_id], references: [id], onDelete: Cascade)
+  oldStatus            TicketStatus?
+  newStatus            TicketStatus
+  changedBy_profile_id String
+  changedBy            Profile        @relation("TicketStatusChanger", fields: [changedBy_profile_id], references: [id])
+  note                 String?
+  changedAt            DateTime       @default(now())
 
   @@index([ticket_id])
-  @@index([changedBy_id])
+  @@index([changedBy_profile_id])
 }
 
 model FeedbackComment {
-  id          String         @id() @default(uuid())
-  content     String
-  ticket_id   String
-  ticket      FeedbackTicket @relation(fields: [ticket_id], references: [id])
-  vote_box_id String         @unique()
-  vote_box    VoteBox        @relation(fields: [vote_box_id], references: [id])
-  author_id   String
-  author      User           @relation(fields: [author_id], references: [id])
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt()
+  id                String         @id() @default(uuid())
+  content           String
+  ticket_id         String
+  ticket            FeedbackTicket @relation(fields: [ticket_id], references: [id])
+  vote_box_id       String         @unique()
+  vote_box          VoteBox        @relation(fields: [vote_box_id], references: [id])
+  author_profile_id String
+  author            Profile        @relation("FeedbackCommentAuthor", fields: [author_profile_id], references: [id])
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt()
 }
 
 model UserInviteToken {
@@ -920,16 +949,16 @@ model EntityCommunityMember {
   member_level                     Int                             @default(1)
   entity_community_id              String
   entity_community                 EntityCommunity                 @relation(fields: [entity_community_id], references: [id], onDelete: Cascade)
-  user_id                          String
-  user                             User                            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  profile_id                       String
+  profile                          Profile                         @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   entity_community_member_position EntityCommunityMemberPosition[]
   entity_community_invites         EntityCommunityInvite[]
   origin_invite_id                 String?                         @unique()
   origin_invite                    EntityCommunityInvite?          @relation("InviteOrigin", fields: [origin_invite_id], references: [id])
 
-  @@unique([entity_community_id, user_id])
+  @@unique([entity_community_id, profile_id])
   @@index([entity_community_id])
-  @@index([user_id])
+  @@index([profile_id])
 }
 
 model EntityCommunityMemberPosition {
@@ -965,46 +994,122 @@ model EntityCommunityPosition {
   @@index([entity_community_id])
 }
 
-model EntityMember {
-  id                        String                 @id() @default(uuid())
-  entity_member_position    EntityMemberPosition[]
-  entity_member_position_id String
-  membership_tier           String?
-  subscription_id           String?
-  reputation_score          Int                    @default(0)
-  isVerified                Boolean                @default(false)
-  expiresAt                 DateTime?
-  user_id                   String
-  user                      User                   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+/// One operational affiliation row per Profile per anchor EntityPosition (same rule as legacy EntityMember).
+model ProfileOperationalAffiliation {
+  id                        String                                  @id() @default(uuid())
+  dominant_operational_kind OperationalRelationshipKind             @default(OPERATIONAL_STAFF)
+  profile_id                String
+  profile                   Profile                                 @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   entity_id                 String
-  entity                    Entity                 @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  entity                    Entity                                  @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  anchor_entity_position_id String
+  anchor_entity_position    EntityPosition                          @relation("OperationalAffiliationAnchor", fields: [anchor_entity_position_id], references: [id], onDelete: Cascade)
+  position_assignments      ProfileOperationalAffiliationPosition[]
+  reputation_score          Int                                     @default(0)
+  isVerified                Boolean                                 @default(false)
+  expiresAt                 DateTime?
   posts                     Post[]
 
-  @@unique([user_id, entity_member_position_id])
-  @@index([user_id])
-  @@index([entity_member_position_id])
+  @@unique([profile_id, anchor_entity_position_id])
+  @@index([profile_id])
+  @@index([entity_id])
+  @@index([entity_id, dominant_operational_kind])
 }
 
-model EntityMemberPosition {
-  id                 String         @id() @default(uuid())
-  entity_member_id   String
-  entityMember       EntityMember   @relation(fields: [entity_member_id], references: [id], onDelete: Cascade)
-  entity_position_id String
-  entityPosition     EntityPosition @relation(fields: [entity_position_id], references: [id], onDelete: Cascade)
-  assignedAt         DateTime       @default(now())
-  expiresAt          DateTime?
+model ProfileOperationalAffiliationPosition {
+  id                         String                        @id() @default(uuid())
+  operational_affiliation_id String
+  operational_affiliation    ProfileOperationalAffiliation @relation(fields: [operational_affiliation_id], references: [id], onDelete: Cascade)
+  entity_position_id         String
+  entity_position            EntityPosition                @relation(fields: [entity_position_id], references: [id], onDelete: Cascade)
+  assignedAt                 DateTime                      @default(now())
+  expiresAt                  DateTime?
 
-  @@unique([entity_member_id, entity_position_id])
+  @@unique([operational_affiliation_id, entity_position_id])
+  @@index([operational_affiliation_id])
+}
+
+model ProfileCommercialAffiliation {
+  id                        String                                 @id() @default(uuid())
+  commercial_kind           CommercialRelationshipKind
+  profile_id                String
+  profile                   Profile                                @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  entity_id                 String
+  entity                    Entity                                 @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  anchor_entity_position_id String
+  anchor_entity_position    EntityPosition                         @relation("CommercialAffiliationAnchor", fields: [anchor_entity_position_id], references: [id], onDelete: Cascade)
+  position_assignments      ProfileCommercialAffiliationPosition[]
+  membership_tier           String?
+  subscription_id           String?
+  reputation_score          Int                                    @default(0)
+  isVerified                Boolean                                @default(false)
+  expiresAt                 DateTime?
+
+  @@unique([profile_id, anchor_entity_position_id])
+  @@index([profile_id])
+  @@index([entity_id])
+  @@index([entity_id, commercial_kind])
+}
+
+model ProfileCommercialAffiliationPosition {
+  id                        String                       @id() @default(uuid())
+  commercial_affiliation_id String
+  commercial_affiliation    ProfileCommercialAffiliation @relation(fields: [commercial_affiliation_id], references: [id], onDelete: Cascade)
+  entity_position_id        String
+  entity_position           EntityPosition               @relation(fields: [entity_position_id], references: [id], onDelete: Cascade)
+  assignedAt                DateTime                     @default(now())
+  expiresAt                 DateTime?
+
+  @@unique([commercial_affiliation_id, entity_position_id])
+  @@index([commercial_affiliation_id])
+}
+
+model ProfileStrategicAffiliation {
+  id                        String                                @id() @default(uuid())
+  strategic_kind            StrategicRelationshipKind             @default(OTHER)
+  profile_id                String
+  profile                   Profile                               @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  entity_id                 String
+  entity                    Entity                                @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  anchor_entity_position_id String
+  anchor_entity_position    EntityPosition                        @relation("StrategicAffiliationAnchor", fields: [anchor_entity_position_id], references: [id], onDelete: Cascade)
+  position_assignments      ProfileStrategicAffiliationPosition[]
+  reputation_score          Int                                   @default(0)
+  isVerified                Boolean                               @default(false)
+  expiresAt                 DateTime?
+
+  @@unique([profile_id, anchor_entity_position_id])
+  @@index([profile_id])
+  @@index([entity_id])
+  @@index([entity_id, strategic_kind])
+}
+
+model ProfileStrategicAffiliationPosition {
+  id                       String                      @id() @default(uuid())
+  strategic_affiliation_id String
+  strategic_affiliation    ProfileStrategicAffiliation @relation(fields: [strategic_affiliation_id], references: [id], onDelete: Cascade)
+  entity_position_id       String
+  entity_position          EntityPosition              @relation(fields: [entity_position_id], references: [id], onDelete: Cascade)
+  assignedAt               DateTime                    @default(now())
+  expiresAt                DateTime?
+
+  @@unique([strategic_affiliation_id, entity_position_id])
+  @@index([strategic_affiliation_id])
 }
 
 model EntityPosition {
-  id                       String                 @id() @default(uuid())
-  title                    String
-  entity_id                String
-  entity                   Entity                 @relation(fields: [entity_id], references: [id], onDelete: Cascade)
-  entity_members_positions EntityMemberPosition[]
-  created_at               DateTime               @default(now())
-  updated_at               DateTime               @updatedAt()
+  id                             String                                  @id() @default(uuid())
+  title                          String
+  entity_id                      String
+  entity                         Entity                                  @relation(fields: [entity_id], references: [id], onDelete: Cascade)
+  operational_affiliation_anchor ProfileOperationalAffiliation[]         @relation("OperationalAffiliationAnchor")
+  operational_assignment_rows    ProfileOperationalAffiliationPosition[]
+  commercial_affiliation_anchors ProfileCommercialAffiliation[]          @relation("CommercialAffiliationAnchor")
+  commercial_assignment_rows     ProfileCommercialAffiliationPosition[]
+  strategic_affiliation_anchors  ProfileStrategicAffiliation[]           @relation("StrategicAffiliationAnchor")
+  strategic_assignment_rows      ProfileStrategicAffiliationPosition[]
+  created_at                     DateTime                                @default(now())
+  updated_at                     DateTime                                @updatedAt()
 
   @@unique([entity_id, title])
   @@index([entity_id])
@@ -1102,8 +1207,8 @@ model UserCommunityVisit {
   id                  String          @id() @default(uuid())
   visited_at          DateTime        @default(now())
   source              VisitSource     @default(DIRECT_QR)
-  user_id             String
-  user                User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  profile_id          String
+  profile             Profile         @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   entity_community_id String
   entity_community    EntityCommunity @relation(fields: [entity_community_id], references: [id], onDelete: Cascade)
   feel_id             String?
@@ -1111,7 +1216,7 @@ model UserCommunityVisit {
   vibe_id             String?
   vibe                ReferenceVibes? @relation(fields: [vibe_id], references: [id])
 
-  @@index([user_id])
+  @@index([profile_id])
   @@index([entity_community_id])
   @@index([feel_id])
   @@index([vibe_id])
@@ -1201,8 +1306,8 @@ model Poll {
   id           String          @id() @default(uuid())
   community_id String
   community    EntityCommunity @relation(fields: [community_id], references: [id], onDelete: Cascade)
-  user_id      String
-  user         User            @relation(fields: [user_id], references: [id])
+  profile_id   String
+  profile      Profile         @relation("PollCreator", fields: [profile_id], references: [id])
   poll_title   String
   description  String
   created_at   DateTime        @default(now())
@@ -1222,14 +1327,14 @@ model PollOption {
 
 model PollVote {
   id          String     @id() @default(uuid())
-  user_id     String
+  profile_id  String
   option_id   String
   voted_at    DateTime   @default(now())
   poll_option PollOption @relation(fields: [option_id], references: [id], onDelete: Cascade)
-  user        User       @relation(fields: [user_id], references: [id])
+  profile     Profile    @relation("PollVotesByProfile", fields: [profile_id], references: [id])
 
-  @@unique([user_id, option_id])
-  @@index([user_id])
+  @@unique([profile_id, option_id])
+  @@index([profile_id])
 }
 
 model Brand {

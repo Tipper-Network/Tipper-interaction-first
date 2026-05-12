@@ -3,6 +3,7 @@ import "offering"
 import "../entity_community/votes"
 import "../user/user"
 import "../entity_community/thoughts"
+import "../entity_community/entity_community"
 
 enum TagType {
   AMENITY

@@ -1,4 +1,5 @@
 import "../user/user"
+import "../entity/posts"
 import "../entity_community/community_qna"
 import "../entity_community/group_chats"
 import "../entity/entity"

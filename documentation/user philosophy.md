@@ -24,6 +24,8 @@ Important nuance: this is rarely a sealed “inner core vs outer mask.” **Iden
 - **User-facing “user” space (conceptually):** a relatively **neutral** place for longitudinal signals: actions, movements, patterns, growth-like or participation stats—the ledger of **what happened**, as the system can observe it (subject to consent, transparency, and correction).
 - Philosophically: closer to **who the person is in fact** over time, not **who they say they are**.
 
+**Schema spine:** **`User`** is still the mandatory **login, ownership, claiming, and enforcement** account (`Role`, credentials, **`owned_entities`**, **`RequestClaim`**, invites). Much of what product reads as **“who is acting socially”** is stored against **`profile_id`** (see [Summary](#summary) and [Schema alignment](#schema-alignment)); accountability always resolves **`Profile` → `User`**.
+
 ### Profile
 
 **The profile** is the layer of **representation**: what the person endorses, stages, or wants others (and the product) to coordinate on.
@@ -58,7 +60,56 @@ The product opportunity: one surface can feel like “part of myself” while **
 
 | Layer | Epistemic role | Typical content |
 |--------|----------------|------------------|
-| **User** | Evidenced individual over time | Behavior, movement, participation, growth-like stats (observed / accumulated) |
-| **Profile** | Represented identity | Values, archetypes, interests (onboarding); skills, activities, places, communities (curated / declared) |
+| **User** | Account, auth, enforcement, ownership spine | Login, role, claims on entities, invites, owned entities |
+| **Profile** | Represented Tipper identity & social graph edges | Onboarding selections, memberships/affiliations, visits, votes, comments, thoughts, Q&A, chats, feedback authorship, suggested tags |
+
+Detailed field-level mapping: **see [Schema alignment](#schema-alignment) below** (matches generated ZenStack models).
+
+---
+
+## Tipper-facing identity vs personal brand (`Entity`)
+
+- **`Profile` (1:1 with `User`)** is Tipper’s **resident identity dossier**: what others coordinate on when interacting with **you** as a person on the platform (display, onboarding story, memberships, visits, votes, comments, polls, chats, feedback authorship—see [Schema alignment](#schema-alignment)). Entity feed **posts “as the business”** use **`ProfileOperationalAffiliation`** (see [Entity posts](#entity-posts-as-the-business)).
+- **`Entity` with type `PERSONAL_BRAND`** is optional: an **institutional/public node** in the entity graph when someone intentionally operates as a brand—**not** the same row as `Profile`, but both can attach to the same human via `owner` / conventions in product.
+
+Membership and social participation are keyed to **`Profile`** wherever the UX means “this Tipper identity,” not duplicate keys for the sake of joins; moderation and accountability still resolve to **`User`** through `profile.user_id`.
+
+---
+
+## Schema alignment
+
+The following **`Profile`** relations are defined in ZenStack (`apps/api/schema/**/*.zmodel`):
+
+| Area | Relation (conceptual) |
+|------|------------------------|
+| Onboarding | `profile_personas`, `profile_interests`, `profile_values` |
+| Memberships / affiliations | `entity_community_memberships`; `operational_affiliations`, `commercial_affiliations`, `strategic_affiliations` (entity-side relationship lanes) |
+| Visits | `community_visits` (`UserCommunityVisit`) |
+| Community creation | `initiated_communities` (`EntityCommunity` initiator) |
+| Votes | `votes` (`Vote`), `poll_votes`, `polls_created` |
+| Discussion | `post_comments`; `thoughts`, `thought_comments`; `community_qnas`, `community_qna_responses`; `group_chat_memberships`, `group_chat_messages` |
+| Feedback board | `feedback_tickets`, `feedback_comments`, `feedback_status_changes` |
+| Tags | `suggested_tags_created` (`Tag.created_by_profile`) |
+
+**Participant content** uses **`profile_id`** as actor where the readable subject is Tipper identity; **`User`** stays the login and abuse spine (`user_id` reachable via profile).
+
+---
+
+## What stays on **`User`** (account spine)
+
+Keeping these on **`User`** keeps auth, ownership, and non-social flows clear:
+
+- Credentials, **`Role`**, **email**, verification tokens, **`profile`** (1:1 link)
+- **`owned_entities`** (entity ownership claim at account level where modeled)
+- **`user_claims`** (`RequestClaim`—claiming workflows)
+- Invite graph: **`user_invite_tokens`**, root / received **`UserInvite`**
+
+---
+
+## Entity posts (“as the business”)
+
+**`Post`** ties author capacity to **`ProfileOperationalAffiliation`**, not a bare `profile_id`: posting in the entity feed represents **scoped operational relationship** with the entity, aligned with partnerships/staff—not the same primitive as commenting as a visitor or community member.
+
+---
 
 The onboarding shape should **teach** this separation: profile as **endorsed narrative and inventory**, user as **space for behavioral truth** under clear rules—not one undifferentiated “account page.”

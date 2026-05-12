@@ -48,6 +48,5 @@ model RequestClaimMedia {
   key        String
   type       MediaType
   created_at DateTime       @default(now())
-
   @@index([claim_id])
 }
