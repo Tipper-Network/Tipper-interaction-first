@@ -1,38 +1,87 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
 import React from "react";
 import { HOW_IT_WORKS } from "@/content/pages/tipper_standards/how_it_works";
 
+const STEP_OPACITIES = [
+  "bg-primary/10",
+  "bg-primary/22",
+  "bg-primary/35",
+  "bg-primary/50",
+  "bg-primary/65",
+  "bg-primary/80",
+];
+
+const STEP_TEXT = [
+  "text-foreground",
+  "text-foreground",
+  "text-foreground",
+  "text-foreground",
+  "text-white",
+  "text-white",
+];
+
+const STEP_MUTED = [
+  "text-muted-foreground",
+  "text-muted-foreground",
+  "text-muted-foreground",
+  "text-foreground/70",
+  "text-white/80",
+  "text-white/80",
+];
+
 export default async function HowItWorksPage() {
   return (
-    <div className="container mx-auto px-6 py-12">
-      <h1 className="text-4xl font-bold text-center mb-8 flex items-center justify-center">
-        {HOW_IT_WORKS.title.prefix}
-        <span className="text-primary px-2">
-          {HOW_IT_WORKS.title.highlight}
-        </span>
-        {HOW_IT_WORKS.title.suffix}
-      </h1>
-      <p className="text-center text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
-        {HOW_IT_WORKS.intro}
-      </p>
-      <div className="relative">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {HOW_IT_WORKS.steps.map((step, index) => (
-            <Card
-              key={index}
-              className={`p-6 relative ${
-                step.status === "coming-soon"
-                  ? "border-2 border-secondary"
-                  : "border-2 border-primary/20"
+    <div className="min-h-screen w-full bg-background px-6 py-16">
+      {/* Header */}
+      <div className="flex flex-col items-center gap-4 mb-12 text-center">
+        <div className="flex items-center gap-1">
+          <h1 className="text-3xl font-bold text-foreground">How&nbsp;</h1>
+          <Image
+            src="/assets/logos/Tipper_Logos_Brandmark_Ruby.svg"
+            alt="Tipper"
+            width={32}
+            height={32}
+          />
+          <h1 className="text-3xl font-bold text-foreground">ipper Works</h1>
+        </div>
+        <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
+          {HOW_IT_WORKS.intro}
+        </p>
+      </div>
+
+      {/* Steps — progressive color stack */}
+      <div className="flex flex-col gap-3 max-w-2xl mx-auto">
+        {HOW_IT_WORKS.steps.map((step, index) => (
+          <div
+            key={index}
+            className={`${STEP_OPACITIES[index]} rounded-2xl px-6 py-5 flex items-start gap-4`}
+          >
+            {/* Step number badge */}
+            <div
+              className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 ${
+                index < 4
+                  ? "border-primary/30 text-primary"
+                  : "border-white/60 text-white"
               }`}
             >
-              <div className="absolute -top-3 left-4">
+              {step.step}
+            </div>
+
+            {/* Content */}
+            <div className="flex flex-col gap-1 flex-1">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className={`font-semibold text-sm ${STEP_TEXT[index]}`}>
+                  {step.title}
+                </h3>
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  className={`text-xs shrink-0 px-2 py-0.5 rounded-full font-medium ${
                     step.status === "active"
-                      ? "bg-tertiary-tint text-tertiary-shade"
-                      : "bg-secondary text-secondary-foreground"
+                      ? index < 4
+                        ? "bg-tertiary-tint text-tertiary-shade"
+                        : "bg-white/20 text-white"
+                      : index < 4
+                        ? "bg-primary/10 text-primary"
+                        : "bg-white/20 text-white"
                   }`}
                 >
                   {step.status === "active"
@@ -40,40 +89,19 @@ export default async function HowItWorksPage() {
                     : HOW_IT_WORKS.statusLabels.comingSoon}
                 </span>
               </div>
-
-              <div className="text-xs text-gray-500 mb-2 font-medium">
-                {step.timeline}
-              </div>
-
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mb-4 ${
-                  step.status === "active"
-                    ? "bg-primary text-white"
-                    : "bg-gray-300 text-gray-600"
+              <p className={`text-xs leading-relaxed ${STEP_MUTED[index]}`}>
+                {step.description}
+              </p>
+              <p
+                className={`text-xs font-medium mt-1 ${
+                  index < 4 ? "text-primary/60" : "text-white/60"
                 }`}
               >
-                {step.step}
-              </div>
-
-              <CardHeader className="flex items-center space-x-4 px-0">
-                <CardTitle className="text-lg">{step.title}</CardTitle>
-              </CardHeader>
-              <Separator className="mb-4" />
-              <CardContent className="px-0">
-                <p className="text-gray-700">{step.description}</p>
-                {step.status === "coming-soon" && (
-                  <div className="mt-4 p-3 bg-secondary/10 rounded-lg">
-                    <p className="text-sm text-secondary-foreground">
-                      <strong>{HOW_IT_WORKS.statusLabels.roadmapPrefix}</strong>{" "}
-                      {HOW_IT_WORKS.statusLabels.roadmapSuffix}{" "}
-                      {step.timeline.split("(")[1]?.replace(")", "")}.
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                {step.timeline}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

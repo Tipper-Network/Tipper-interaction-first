@@ -1,15 +1,28 @@
 import React from "react";
-import BlogComponent from "./BlogComponent";
+import Image from "next/image";
+import SubstackRss from "@/components/substack_rss";
 import { RESOURCES } from "@/content/pages/tipper_standards/resources";
 
 export default function BlogPage() {
   return (
-    <div className="container mx-auto px-6 py-12">
-      <h1 className="text-3xl font-bold text-center mb-8">{RESOURCES.title}</h1>
-      <p className="text-center text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
-        {RESOURCES.intro}
-      </p>
-      <BlogComponent blogPosts={RESOURCES.posts} />
+    <div className="min-h-screen w-full bg-background px-6 py-16">
+      {/* Header */}
+      <div className="flex flex-col items-center gap-4 mb-12 text-center">
+        <div className="flex items-center gap-1">
+          <Image
+            src="/assets/logos/Tipper_Logos_Brandmark_Ruby.svg"
+            alt="Tipper"
+            width={36}
+            height={36}
+          />
+          <h1 className="text-3xl font-bold text-foreground">ipper Blog</h1>
+        </div>
+        <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
+          {RESOURCES.intro}
+        </p>
+      </div>
+
+      <SubstackRss />
     </div>
   );
 }

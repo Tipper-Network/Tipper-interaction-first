@@ -1,13 +1,5 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import React from "react";
 import Link from "next/link";
 
@@ -25,38 +17,50 @@ interface BlogComponentProps {
   blogPosts: BlogPost[];
 }
 
+const CARD_COLORS = [
+  "bg-secondary-tint",
+  "bg-primary-tint",
+  "bg-tertiary-tint",
+  "bg-tertiary-tint",
+  "bg-secondary-tint",
+  "bg-primary-tint",
+];
+
 export default function BlogComponent({ blogPosts }: BlogComponentProps) {
   return (
-    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
       {blogPosts.map((post, index) => (
-        <Card key={index} className="p-6">
-          <CardHeader>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-primary font-medium">
+        <Link
+          key={index}
+          href={post.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${CARD_COLORS[index % CARD_COLORS.length]} rounded-3xl p-6 flex flex-col justify-between gap-4 min-h-[200px] hover:opacity-90 transition-opacity`}
+        >
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-primary">
                 {post.category}
               </span>
-              <span className="text-sm text-gray-500">{post.readTime}</span>
+              <span className="text-xs text-muted-foreground">
+                {post.readTime}
+              </span>
             </div>
-            <CardTitle className="text-lg">{post.title}</CardTitle>
-          </CardHeader>
-          <Separator className="" />
-          <CardContent>
-            <div className="flex flex-col items-center justify-between">
-              <p className="mb-4">{post.excerpt}</p>
-              <div className="flex items-center justify-end w-full text-sm gap-2 text-gray-500 mb-4">
-                <span className="text-gray-700  font-medium">
-                  By {post.author}
-                </span>
-                <span className="">{post.date}</span>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            <Link href={post.link} className="w-full text-primary">
-              Read More
-            </Link>
-          </CardFooter>
-        </Card>
+            <h3 className="font-semibold text-sm text-foreground leading-snug">
+              {post.title}
+            </h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {post.excerpt}
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span className="font-medium text-foreground/70">
+              {post.author}
+            </span>
+            <span>{post.date}</span>
+          </div>
+        </Link>
       ))}
     </div>
   );

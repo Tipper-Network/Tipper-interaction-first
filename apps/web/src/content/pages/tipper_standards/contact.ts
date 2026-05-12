@@ -49,8 +49,9 @@ export const CONTACT = {
       title: "Support Hours",
       items: [
         "Monday - Friday: 9:00 AM - 6:00 PM (GMT+3)",
-        "Saturday: 10:00 AM - 4:00 PM (GMT+3)",
-        "Sunday: Closed",
+        "Saturday- sunday: 10:00 AM - 4:00 PM (GMT+3)",
+        "Or just call, who cares. the dude in charge will be happy to talk to you."
+       
       ],
     },
     response: {
