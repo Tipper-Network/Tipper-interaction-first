@@ -35,7 +35,12 @@ export default function AuthModal({
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const { isOpen: isAuthModalOpen, open: openAuthModal, close: closeAuthModal, mode } = useAuthModalStore();
+  const {
+    isOpen: isAuthModalOpen,
+    open: openAuthModal,
+    close: closeAuthModal,
+    mode,
+  } = useAuthModalStore();
 
   const isLoggedIn = !!user;
 

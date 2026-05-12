@@ -30,7 +30,7 @@ import {
 } from "./entity_profile_setup_types";
 import ContactSection from "./sections/contact_section";
 import OwnerSection from "./sections/owner_section";
-import ScheduleSection from "./sections/schedule_section";    
+import ScheduleSection from "./sections/schedule_section";
 import LocationSection from "./sections/location_section";
 import { normalizeInstagramHandle } from "@/lib/utils/utils";
 import { useRouter } from "next/navigation";

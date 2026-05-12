@@ -6,7 +6,7 @@ import { useEntityDetails } from "@/views/entities/shared/hooks/entities_hooks";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
-import { X, ArrowRight, Building2 } from "lucide-react";  
+import { X, ArrowRight, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils/utils";
 import EntityOnboardingModal from "../onboarding_modal/entity_onboarding_modal";
 import { getEntityOnboardingUrl } from "@/views/entities/shared/utils/entity_routes";

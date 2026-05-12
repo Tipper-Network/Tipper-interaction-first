@@ -40,7 +40,7 @@ export default function WhatsAppChatButton({
         href={whatsappUrl}
         target="_blank"
         className={cn(
-          "w-full hover:bg-tertiary-tint bg-tertiary flex justify-center gap-2 rounded-lg items-center  p-1",
+          "w-auto hover:bg-tertiary-tint bg-tertiary flex justify-center gap-2 rounded-lg items-center  p-1",
           className
         )}
       >

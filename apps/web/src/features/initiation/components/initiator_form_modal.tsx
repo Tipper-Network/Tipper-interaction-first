@@ -45,8 +45,8 @@ export default function InitiatorFormModal({
     >
       <div className="space-y-5">
         <p className="text-sm text-muted-foreground">
-          The community will read this before voting. Be specific — a
-          thoughtful reason goes further than a vague one.
+          The community will read this before voting. Be specific — a thoughtful
+          reason goes further than a vague one.
         </p>
 
         <div className="space-y-1.5">
@@ -68,9 +68,7 @@ export default function InitiatorFormModal({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="relationship_context">
-            How do you know them?
-          </Label>
+          <Label htmlFor="relationship_context">How do you know them?</Label>
           <Textarea
             id="relationship_context"
             placeholder="e.g. We've been coworking at the same café for three months. I trust her energy."

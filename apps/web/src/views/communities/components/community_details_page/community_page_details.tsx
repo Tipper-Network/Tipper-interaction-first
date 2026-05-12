@@ -9,7 +9,7 @@ import {
   EntityCommunityStatus__Enum,
   EntityType__Enum,
   RequestClaimStatus__Enum,
-  } from "@tipper/shared";
+} from "@tipper/shared";
 import LogoViewComponent from "@/components/logo_view_component";
 import CommunityMetricsButton from "./communtiy_details_components/community_metrics_button";
 import { CommunityDisclaimer } from "./communtiy_details_components/community_disclaimer";

@@ -18,9 +18,7 @@ export default function InitiationLayout({
         />
       </header>
 
-      <main className="flex-1 flex flex-col items-center px-4">
-        {children}
-      </main>
+      <main className="flex-1 flex flex-col items-center px-4">{children}</main>
 
       <Toaster />
     </div>

@@ -46,7 +46,9 @@ export default function EditingProfileDetailsCard({
 
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const form = useForm<EntityDetailsDraft>({
-    resolver: zodResolver(EntityDetailsDraftSchema) as Resolver<EntityDetailsDraft>,
+    resolver: zodResolver(
+      EntityDetailsDraftSchema
+    ) as Resolver<EntityDetailsDraft>,
     defaultValues: {
       contact: {
         instagram_url: "@",

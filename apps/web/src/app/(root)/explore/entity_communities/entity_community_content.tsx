@@ -46,9 +46,7 @@ const EntityCommunityPage = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="text-muted-foreground">
-          {ENTITY_COMMUNITY_PAGE.loading}
-        </p>
+        <p className="text-muted-foreground">{ENTITY_COMMUNITY_PAGE.loading}</p>
       </div>
     );
   }

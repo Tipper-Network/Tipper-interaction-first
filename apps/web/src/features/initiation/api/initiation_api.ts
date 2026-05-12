@@ -1,4 +1,7 @@
-import type { InitiatorFormData, PendingInvite } from "../types/initiation_types";
+import type {
+  InitiatorFormData,
+  PendingInvite,
+} from "../types/initiation_types";
 
 const API = process.env.NEXT_PUBLIC_API_BASE_URL;
 

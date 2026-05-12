@@ -1,6 +1,7 @@
 export const RESOURCES = {
   title: "Tipper Network Blog",
-  intro: "Insights, tips, and strategies to help your business thrive in the digital age.",
+  intro:
+    "Insights, tips, and strategies to help your business thrive in the digital age.",
   posts: [
     {
       title: "How QR Codes Help Your Business Increase Online Presence",
@@ -13,7 +14,8 @@ export const RESOURCES = {
       link: "https://www.qrstuff.com/blog/marketing/how-qr-codes-help-your-business-increase-online-presence",
     },
     {
-      title: "Building A Strong Online Presence: Strategies For Small Businesses",
+      title:
+        "Building A Strong Online Presence: Strategies For Small Businesses",
       excerpt:
         "Learn the essential strategies for establishing a compelling online presence that attracts and retains customers.",
       author: "Vamsi Krishna Dhakshinadhi",

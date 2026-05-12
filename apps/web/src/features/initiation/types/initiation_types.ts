@@ -6,10 +6,10 @@ export type InitiatorFormData = {
 };
 
 export enum PendingInviteStatus_Enum {
-  WAITING  = "WAITING",   // community hasn't voted yet
-  APPROVED = "APPROVED",  // community approved — invite email sent
-  REJECTED = "REJECTED",  // community rejected
-  EXPIRED  = "EXPIRED",   // token expired before the person scanned
+  WAITING = "WAITING", // community hasn't voted yet
+  APPROVED = "APPROVED", // community approved — invite email sent
+  REJECTED = "REJECTED", // community rejected
+  EXPIRED = "EXPIRED", // token expired before the person scanned
 }
 
 export type PendingInvite = {

@@ -8,7 +8,9 @@ export default async function HowItWorksPage() {
     <div className="container mx-auto px-6 py-12">
       <h1 className="text-4xl font-bold text-center mb-8 flex items-center justify-center">
         {HOW_IT_WORKS.title.prefix}
-        <span className="text-primary px-2">{HOW_IT_WORKS.title.highlight}</span>
+        <span className="text-primary px-2">
+          {HOW_IT_WORKS.title.highlight}
+        </span>
         {HOW_IT_WORKS.title.suffix}
       </h1>
       <p className="text-center text-lg text-gray-600 mb-12 max-w-3xl mx-auto">

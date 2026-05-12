@@ -15,10 +15,10 @@ const TestLandingPage = () => {
 
       {/* Bu  siness Hero Section (replaces previous animated hero) */}
       <EntityHeroSection />
-       <FitCheckComponent />
-       <ProfileBanner />
+      <FitCheckComponent />
+      <ProfileBanner />
 
-       <FooterCtaBanner />
+      <FooterCtaBanner />
     </div>
   );
 };

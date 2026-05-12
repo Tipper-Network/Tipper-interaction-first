@@ -26,7 +26,8 @@ const tooltipWrapperVariants = cva("inline-block", {
 });
 
 export interface ToolTipWrapperProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof tooltipWrapperVariants> {
   tooltipTitle: string;
   children: React.ReactNode;

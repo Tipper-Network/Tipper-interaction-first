@@ -1,6 +1,7 @@
 export const CONTACT = {
   title: "Get in Touch",
-  intro: "We're here to help! Choose the best way to reach us based on your needs.",
+  intro:
+    "We're here to help! Choose the best way to reach us based on your needs.",
   options: [
     {
       title: "WhatsApp Support",

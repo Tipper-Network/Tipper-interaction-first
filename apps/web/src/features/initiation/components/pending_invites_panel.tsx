@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, ChevronUp, Clock, CheckCircle, XCircle, Timer } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Timer,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +21,11 @@ import {
 
 const STATUS_CONFIG: Record<
   PendingInviteStatus_Enum,
-  { label: string; icon: React.ReactNode; variant: "secondary" | "outline" | "destructive" }
+  {
+    label: string;
+    icon: React.ReactNode;
+    variant: "secondary" | "outline" | "destructive";
+  }
 > = {
   [PendingInviteStatus_Enum.WAITING]: {
     label: "Waiting for vote",

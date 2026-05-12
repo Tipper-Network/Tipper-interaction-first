@@ -10,7 +10,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { fetchEntityDetails } from "@/views/entities/shared/api/entities_api";
 
-
 export const metadata = {
   title: "Admin Dashboard - Tipper",
   description: "Admin panel for managing communities and entities",

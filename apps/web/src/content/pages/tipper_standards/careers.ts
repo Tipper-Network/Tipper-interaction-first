@@ -3,6 +3,5 @@ export const CAREERS = {
   headlineLineBreak: "talk to us.",
   body: "If you don't know what merit is, join Tipper and explore yourself in this world with us and discover your interests and build your merit.",
   ctaButtonText: "Contact the Dude In Charge",
-  whatsappMessage:
-    "Hi! I have Merit and I'm interested in career opportunities at Tipper Network.",
+  whatsappMessage: "Hi! What do you mean by Merit??? also... I am interested.",
 } as const;

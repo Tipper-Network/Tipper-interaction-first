@@ -10,8 +10,10 @@ import "react-international-phone/style.css";
 
 import { cn } from "@/lib/utils/utils";
 
-export interface PhoneInputProps
-  extends Omit<BasePhoneInputProps, "value" | "onChange"> {
+export interface PhoneInputProps extends Omit<
+  BasePhoneInputProps,
+  "value" | "onChange"
+> {
   value?: string;
   onChange?: (value: string) => void;
   className?: string;

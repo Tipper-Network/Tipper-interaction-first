@@ -115,7 +115,9 @@ export function UploadMedia({
                         variant="simple"
                         className="absolute px-1 py-1 h-5 w-5 top-1 right-1 bg-white/40"
                         onClick={() => {
-                          onChange?.(selected?.filter((_, i) => i !== indx) || []);
+                          onChange?.(
+                            selected?.filter((_, i) => i !== indx) || []
+                          );
                         }}
                       >
                         <X className="h-2 w-2 " />

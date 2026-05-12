@@ -19,7 +19,7 @@ const ClaimRequestPage = async ({ searchParams }: Props) => {
           <p className="text-muted-foreground">
             Please access this page through a valid business listing.
           </p>
-        </div>    
+        </div>
       </div>
     );
   }

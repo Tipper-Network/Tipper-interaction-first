@@ -1,127 +1,196 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import WhatsAppChatButton from "@/components/button_external_links/whatsapp_chat_button";
+import { Button } from "@/components/ui/button";
 import { WHATSAPP_TIPPER_PHONE } from "@/lib/constants/randoms";
 import { ABOUT } from "@/content/pages/tipper_standards/about";
 
+const VALUE_COLORS = [
+  "bg-secondary-tint",
+  "bg-tertiary-tint",
+  "bg-tertiary-tint",
+];
+
+const MILESTONE_COLORS = [
+  "bg-primary-tint",
+  "bg-secondary-tint",
+  "bg-tertiary-tint",
+];
+
 export default function AboutUsPage() {
   return (
-    <div className="container mx-auto px-6 py-12">
-      {/* Hero Section */}
-      <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold mb-6">{ABOUT.hero.title}</h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+    <div className="min-h-screen w- bg-background overflow-hidden flex flex-col items-center justify-center content-center">
+      {/* ── Hero ── */}
+      <section className="flex flex-col items-center gap-4 px-6 pt-16 pb-12 text-center">
+        <div className="flex items-center gap-1">
+          <h1 className="text-4xl font-bold text-foreground">About&nbsp;</h1>
+          <Image
+            src="/assets/logos/Tipper_Logos_Brandmark_Ruby.svg"
+            alt="Tipper"
+            width={36}
+            height={36}
+          />
+          <h1 className="text-4xl font-bold text-foreground">ipper</h1>
+        </div>
+        <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
           {ABOUT.hero.description}
         </p>
-      </div>
+      </section>
 
-      {/* Mission & Vision */}
-      <div className="grid gap-8 md:grid-cols-2 mb-16">
-        <Card className="p-6">
-          <CardHeader>
-            <CardTitle className="text-2xl flex items-center">
-              <span className="mr-3">{ABOUT.mission.icon}</span>
+      {/* ── Mission & Vision ── */}
+      <section className="px-6 pb-14 max-w-3xl mx-auto">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div className="bg-primary-tint rounded-3xl p-8 flex flex-col gap-3 min-h-[160px]">
+            <span className="text-3xl">{ABOUT.mission.icon}</span>
+            <h3 className="font-semibold text-foreground">
               {ABOUT.mission.sectionTitle}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 leading-relaxed">{ABOUT.mission.body}</p>
-          </CardContent>
-        </Card>
-
-        <Card className="p-6">
-          <CardHeader>
-            <CardTitle className="text-2xl flex items-center">
-              <span className="mr-3">{ABOUT.vision.icon}</span>
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {ABOUT.mission.body}
+            </p>
+          </div>
+          <div className="bg-primary-tint rounded-3xl p-8 flex flex-col gap-3 min-h-[160px]">
+            <span className="text-3xl">{ABOUT.vision.icon}</span>
+            <h3 className="font-semibold text-foreground">
               {ABOUT.vision.sectionTitle}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 leading-relaxed">{ABOUT.vision.body}</p>
-          </CardContent>
-        </Card>
-      </div>
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {ABOUT.vision.body}
+            </p>
+          </div>
+        </div>
+      </section>
 
-      {/* Values Section */}
-      <div className="mb-16">
-        <h2 className="text-3xl font-bold text-center mb-12">{ABOUT.values.sectionTitle}</h2>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {/* ── Our Values ── */}
+      <section className="px-6 pb-16 max-w-3xl mx-auto">
+        <h2 className="text-2xl font-bold text-center mb-8">
+          Our{" "}
+          <span className="text-primary">{ABOUT.values.sectionTitle.replace("Our ", "")}</span>
+        </h2>
+        <div className="grid gap-4 grid-cols-3">
           {ABOUT.values.items.map((value, index) => (
-            <Card key={index} className="p-6 text-center">
-              <CardContent>
-                <div className="text-4xl mb-4">{value.icon}</div>
-                <h3 className="font-semibold mb-2">{value.title}</h3>
-                <p className="text-gray-600 text-sm">{value.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Team Section */}
-      <div className="mb-16">
-        <h2 className="text-3xl font-bold text-center mb-12">{ABOUT.team.sectionTitle}</h2>
-        <div className="grid gap-8 md:grid-cols-1 max-w-4xl mx-auto">
-          {ABOUT.team.items.map((member, index) => (
-            <Card key={index} className="p-6">
-              <CardContent className="text-center">
-                <div className="text-6xl mb-4">{member.image}</div>
-                <h3 className="text-2xl font-semibold mb-2">{member.name}</h3>
-                <p className="text-primary font-medium mb-4">{member.role}</p>
-                <p className="text-gray-700 leading-relaxed max-w-2xl mx-auto">
-                  {member.description}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Milestones Section */}
-      <div className="mb-16">
-        <h2 className="text-3xl font-bold text-center mb-12">{ABOUT.milestones.sectionTitle}</h2>
-        <div className="grid gap-6 md:grid-cols-3 max-w-6xl mx-auto">
-          {ABOUT.milestones.items.map((milestone, index) => (
-            <Card key={index} className="p-6">
-              <CardHeader>
-                <CardTitle className="text-primary text-2xl">
-                  {milestone.year}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <h3 className="font-semibold mb-2">{milestone.title}</h3>
-                <p className="text-gray-600">{milestone.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* CTA Section */}
-      <div className="text-center">
-        <Card className="p-8 max-w-4xl mx-auto">
-          <CardHeader>
-            <CardTitle className="text-2xl">{ABOUT.cta.title}</CardTitle>
-          </CardHeader>
-          <Separator className="mb-6" />
-          <CardContent>
-            <p className="text-gray-700 mb-6">{ABOUT.cta.body}</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <WhatsAppChatButton
-                phoneNumber={WHATSAPP_TIPPER_PHONE}
-                message={ABOUT.cta.whatsappMessage}
-                buttonText={ABOUT.cta.whatsappButtonText}
-                className="sm:w-auto"
-              />
-              <Button variant="outline" className="sm:w-auto">
-                {ABOUT.cta.secondaryButton}
-              </Button>
+            <div
+              key={index}
+              className={`${VALUE_COLORS[index % VALUE_COLORS.length]} rounded-3xl p-6 flex flex-col gap-2 min-h-[140px]`}
+            >
+              <span className="text-2xl">{value.icon}</span>
+              <h3 className="font-semibold text-sm text-foreground">
+                {value.title}
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {value.description}
+              </p>
             </div>
-          </CardContent>
-        </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Our Journey (wave band) ── */}
+      <section className="relative w-full py-20 bg-primary-tint [clip-path:ellipse(120%_100%_at_50%_50%)]">
+        <div className="max-w-3xl mx-auto px-6">
+          <h2 className="text-2xl font-bold text-center mb-10">
+            Our{" "}
+            <span className="text-primary">
+              {ABOUT.milestones.sectionTitle.replace("Our ", "")}
+            </span>
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {ABOUT.milestones.items.map((milestone, index) => (
+              <div
+                key={index}
+                className={`${MILESTONE_COLORS[index % MILESTONE_COLORS.length]} rounded-3xl p-6 flex flex-col gap-2`}
+              >
+                <span className="text-primary font-bold text-lg">
+                  {milestone.year}
+                </span>
+                <h3 className="font-semibold text-sm text-foreground">
+                  {milestone.title}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {milestone.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Our Team ── */}
+      <section className="px-6 py-16 text-center max-w-2xl mx-auto">
+        <h2 className="text-2xl font-bold mb-2">
+          Our{" "}
+          <span className="text-foreground">
+            {ABOUT.team.sectionTitle.replace("Our ", "")}
+          </span>
+        </h2>
+        {ABOUT.team.items.map((member, index) => (
+          <div key={index} className="flex flex-col items-center gap-3 mt-4">
+            <p className="text-primary font-semibold">{member.role}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
+              {member.description}
+            </p>
+          </div>
+        ))}
+      </section>
+
+      {/* ── CTA ── */}
+      {/* <section className="px-6 pb-20 text-center max-w-xl mx-auto flex flex-col items-center gap-4">
+        <h2 className="text-2xl font-bold text-foreground">{ABOUT.cta.title}</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {ABOUT.CTA.body}
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <WhatsAppChatButton
+            phoneNumber={WHATSAPP_TIPPER_PHONE}
+            message={ABOUT.CTA.whatsappMessage}
+            buttonText={ABOUT.CTA.whatsappButtonText}
+            className="sm:w-auto"
+          />
+          <Button variant="outline" className="sm:w-auto">
+            {ABOUT.CTA.secondaryButton}
+          </Button>
+        </div>
+      </section> */}
+      <section className=" relative pb-20 md:pt-10 w-fit px-4  pt-2 md:mb-20">
+      <div className="mx-auto w-full  ">
+        <div className="relative  rounded-3xl bg-primary-tint/60 px-6 pb-16 pt-12 text-center shadow-sm sm:px-10 sm:pb-64 md:px-14 md:pb-72 md:pt-14 overflow-visible">
+          <h2 className="text-balance text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+            {ABOUT.CTA.title}
+            <span className="font-semibold text-foreground">
+              {ABOUT.CTA.TitleSpan}
+            </span>
+          </h2>
+
+          <p className="mx-auto mt-4 max-w-2xl text-pretty text-base text-foreground/80 sm:text-lg">
+            {ABOUT.CTA.body}{" "}
+            <span className="font-semibold text-foreground">
+              {ABOUT.CTA.TitleLineBreak}
+            </span>
+          </p>
+
+          <WhatsAppChatButton
+            phoneNumber={WHATSAPP_TIPPER_PHONE}
+            message={ABOUT.CTA.whatsappMessage}
+            buttonText={ABOUT.CTA.whatsappButtonText}
+            className=" py-2 md:w-auto"
+          />
+        </div>
+
+        {/* Mascots / Illustration */}
+         <div className="  pointer-events-none absolute inset-x-0  -bottom-20 flex justify-center ">
+          <div className=" w-full h-fit">
+            <Image
+              src="/assets/mascots/Group-landing.png"
+              alt=""
+              width={1000}
+              height={420}
+              // priority={false}
+              className="  h-auto w-[min(1100px,92vw)] select-none object-cover"
+            />
+          </div>
+        </div>
       </div>
+    </section> 
     </div>
   );
 }

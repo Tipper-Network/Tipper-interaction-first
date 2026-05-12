@@ -28,12 +28,12 @@ import socket from "@/lib/socket";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Step =
-  | "preview"       // Community + entity story — restricted view
-  | "interest"      // Interested / Not Interested decision
-  | "who-form"      // Stranger describes themselves
-  | "auth"          // Inline auth (sign up) before submitting
-  | "pending"       // Community is voting — live WS updates
-  | "outcome";      // Approved / Rejected
+  | "preview" // Community + entity story — restricted view
+  | "interest" // Interested / Not Interested decision
+  | "who-form" // Stranger describes themselves
+  | "auth" // Inline auth (sign up) before submitting
+  | "pending" // Community is voting — live WS updates
+  | "outcome"; // Approved / Rejected
 
 type VoteOutcome = "approved" | "rejected" | null;
 
@@ -88,7 +88,10 @@ function StorySegment({ story }: { story: typeof MOCK_COMMUNITY.story }) {
       {expanded && (
         <div className="space-y-4 pt-1">
           {story.body.split("\n\n").map((para, i) => (
-            <p key={i} className="text-sm text-muted-foreground leading-relaxed">
+            <p
+              key={i}
+              className="text-sm text-muted-foreground leading-relaxed"
+            >
               {para}
             </p>
           ))}
@@ -99,7 +102,10 @@ function StorySegment({ story }: { story: typeof MOCK_COMMUNITY.story }) {
             </p>
             <ul className="space-y-1.5">
               {story.what_to_expect.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                <li
+                  key={i}
+                  className="flex items-start gap-2 text-sm text-muted-foreground"
+                >
                   <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
                   {item}
                 </li>
@@ -133,7 +139,9 @@ function WhoForm({
   return (
     <div className="space-y-5">
       <div className="space-y-1">
-        <h2 className="text-xl font-bold text-foreground">Tell us about yourself</h2>
+        <h2 className="text-xl font-bold text-foreground">
+          Tell us about yourself
+        </h2>
         <p className="text-sm text-muted-foreground">
           The community will see this before they vote. Be honest.
         </p>
@@ -146,7 +154,9 @@ function WhoForm({
             id="full_name"
             placeholder="First and last name"
             value={form.full_name}
-            onChange={(e) => setForm((f) => ({ ...f, full_name: e.target.value }))}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, full_name: e.target.value }))
+            }
           />
         </div>
 
@@ -156,7 +166,9 @@ function WhoForm({
             id="what_you_do"
             placeholder="e.g. I'm building a logistics app for small businesses"
             value={form.what_you_do}
-            onChange={(e) => setForm((f) => ({ ...f, what_you_do: e.target.value }))}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, what_you_do: e.target.value }))
+            }
           />
         </div>
 
@@ -167,7 +179,9 @@ function WhoForm({
             placeholder="What draws you to this community specifically?"
             rows={3}
             value={form.why_you_want_in}
-            onChange={(e) => setForm((f) => ({ ...f, why_you_want_in: e.target.value }))}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, why_you_want_in: e.target.value }))
+            }
           />
         </div>
       </div>
@@ -192,11 +206,16 @@ function PendingStep({ communityName }: { communityName: string }) {
   const progress = Math.min((votesFor / threshold) * 100, 100);
 
   useEffect(() => {
-    socket.on("vote:cast", (data: { votes_for: number; votes_against: number }) => {
-      setVotesFor(data.votes_for);
-      setVotesAgainst(data.votes_against);
-    });
-    return () => { socket.off("vote:cast"); };
+    socket.on(
+      "vote:cast",
+      (data: { votes_for: number; votes_against: number }) => {
+        setVotesFor(data.votes_for);
+        setVotesAgainst(data.votes_against);
+      }
+    );
+    return () => {
+      socket.off("vote:cast");
+    };
   }, []);
 
   return (
@@ -242,7 +261,7 @@ function PendingStep({ communityName }: { communityName: string }) {
           </div>
 
           <p className="text-xs text-muted-foreground border-t pt-3">
-              You can leave this page — we&apos;ll reach out when they decide.
+            You can leave this page — we&apos;ll reach out when they decide.
           </p>
         </CardContent>
       </Card>
@@ -260,18 +279,22 @@ function OutcomeStep({ outcome }: { outcome: "approved" | "rejected" }) {
           </div>
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-foreground">You&apos;re in.</h2>
+          <h2 className="text-2xl font-bold text-foreground">
+            You&apos;re in.
+          </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            The community approved your request. Your next step is to visit the space
-            and scan the QR code at the entrance to complete your membership.
+            The community approved your request. Your next step is to visit the
+            space and scan the QR code at the entrance to complete your
+            membership.
           </p>
         </div>
         <Card className="border border-border text-left">
           <CardContent className="pt-5 pb-5 flex items-start gap-3">
             <Target className="h-4 w-4 text-primary shrink-0 mt-0.5" />
             <p className="text-sm text-foreground leading-relaxed">
-              When you arrive at The Hub, scan the QR code at the door. That&apos;s
-              your final check-in and unlocks the full community board.
+              When you arrive at The Hub, scan the QR code at the door.
+              That&apos;s your final check-in and unlocks the full community
+              board.
             </p>
           </CardContent>
         </Card>
@@ -289,8 +312,9 @@ function OutcomeStep({ outcome }: { outcome: "approved" | "rejected" }) {
       <div className="space-y-2">
         <h2 className="text-2xl font-bold text-foreground">Not this time.</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          The community reviewed your request and it wasn&apos;t the right fit right now.
-          If someone in the space believes you&apos;re a fit, they can invite you again.
+          The community reviewed your request and it wasn&apos;t the right fit
+          right now. If someone in the space believes you&apos;re a fit, they
+          can invite you again.
         </p>
       </div>
     </div>
@@ -323,13 +347,17 @@ export default function InviteLandingClient({ token }: { token: string }) {
       setStep("outcome");
     });
 
-    return () => { socket.off("invite:outcome"); };
+    return () => {
+      socket.off("invite:outcome");
+    };
   }, [step]);
 
   const { mutate: submitInvite, isPending: isSubmitting } = useMutation({
     mutationFn: () => createUserInvite(token, MOCK_COMMUNITY.entity_slug),
     onSuccess: () => {
-      try { localStorage.removeItem(SHARE_TOKEN_STORAGE_KEY); } catch {}
+      try {
+        localStorage.removeItem(SHARE_TOKEN_STORAGE_KEY);
+      } catch {}
       setStep("pending");
     },
     onError: () => {
@@ -360,7 +388,6 @@ export default function InviteLandingClient({ token }: { token: string }) {
 
   return (
     <div className="w-full max-w-md mx-auto pt-6 pb-16 space-y-6">
-
       {/* ── Step: Preview ──────────────────────────────────────────── */}
       {step === "preview" && (
         <>
@@ -371,10 +398,16 @@ export default function InviteLandingClient({ token }: { token: string }) {
                   <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                     You&apos;ve been invited to
                   </p>
-                  <h1 className="text-2xl font-bold text-foreground">{community.name}</h1>
-                  <p className="text-sm text-muted-foreground mt-0.5">{community.entity_name}</p>
+                  <h1 className="text-2xl font-bold text-foreground">
+                    {community.name}
+                  </h1>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    {community.entity_name}
+                  </p>
                 </div>
-                <Badge variant="outline" className="shrink-0 mt-1">Private</Badge>
+                <Badge variant="outline" className="shrink-0 mt-1">
+                  Private
+                </Badge>
               </div>
 
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -384,7 +417,9 @@ export default function InviteLandingClient({ token }: { token: string }) {
 
               <div className="flex items-start gap-2">
                 <Target className="h-4 w-4 shrink-0 mt-0.5 text-primary" />
-                <p className="text-sm text-foreground leading-relaxed">{community.goal}</p>
+                <p className="text-sm text-foreground leading-relaxed">
+                  {community.goal}
+                </p>
               </div>
 
               <div className="border-t pt-4">
@@ -397,7 +432,11 @@ export default function InviteLandingClient({ token }: { token: string }) {
             This is a private community. Only invited members can join.
           </p>
 
-          <Button size="lg" className="w-full" onClick={() => setStep("interest")}>
+          <Button
+            size="lg"
+            className="w-full"
+            onClick={() => setStep("interest")}
+          >
             I want to be part of this
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -408,10 +447,12 @@ export default function InviteLandingClient({ token }: { token: string }) {
       {step === "interest" && (
         <div className="space-y-6">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold text-foreground">Are you interested?</h2>
+            <h2 className="text-2xl font-bold text-foreground">
+              Are you interested?
+            </h2>
             <p className="text-sm text-muted-foreground">
-              If yes, you&apos;ll fill a short form that the community reviews before
-              voting on your request.
+              If yes, you&apos;ll fill a short form that the community reviews
+              before voting on your request.
             </p>
           </div>
 
@@ -477,14 +518,10 @@ export default function InviteLandingClient({ token }: { token: string }) {
       )}
 
       {/* ── Step: Pending ──────────────────────────────────────────── */}
-      {step === "pending" && (
-        <PendingStep communityName={community.name} />
-      )}
+      {step === "pending" && <PendingStep communityName={community.name} />}
 
       {/* ── Step: Outcome ──────────────────────────────────────────── */}
-      {step === "outcome" && outcome && (
-        <OutcomeStep outcome={outcome} />
-      )}
+      {step === "outcome" && outcome && <OutcomeStep outcome={outcome} />}
     </div>
   );
 }

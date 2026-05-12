@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { UploadMedia } from "@/components/upload_file";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/utils";
-  import { type EntityGallerySlot } from "@/views/entities/shared/api/entities_media_api";
+import { type EntityGallerySlot } from "@/views/entities/shared/api/entities_media_api";
 import {
   useEntityGallery,
   useUpdateEntityGallerySlot,

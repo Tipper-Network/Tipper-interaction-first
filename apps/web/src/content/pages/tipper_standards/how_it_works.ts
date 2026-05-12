@@ -10,7 +10,8 @@ export const HOW_IT_WORKS = {
     active: "✓ Active",
     comingSoon: "🚧 Coming Soon",
     roadmapPrefix: "Roadmap:",
-    roadmapSuffix: "This feature is currently in development and will be available in",
+    roadmapSuffix:
+      "This feature is currently in development and will be available in",
   },
   steps: [
     {

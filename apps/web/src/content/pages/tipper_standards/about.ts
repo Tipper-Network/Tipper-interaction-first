@@ -1,8 +1,8 @@
 export const ABOUT = {
   hero: {
-    title: "About Tipper Network",
+    title: "About Tipper",
     description:
-      "We're building the future of business connectivity, one digital handshake at a time. Our platform empowers businesses to create meaningful connections with their communities through innovative technology and human-centered design, driving the evolution of the digital footprint.",
+      "we are showing the world that this is an adventure, weather you are a business, a group, or a personal brand... everything is an adventure where we connect, structure, design and build together.",
   },
   mission: {
     sectionTitle: "Our Mission",
@@ -12,7 +12,7 @@ export const ABOUT = {
   vision: {
     sectionTitle: "Our Vision",
     icon: "🔮",
-    body: "A world where every business, regardless of size or location, can seamlessly connect with their community, share their story, and thrive in the digital landscape through authentic, meaningful interactions.",
+    body: "A world where we are exposed to the uniqueness or our presence., regardless of activity and context. one where can seamlessly connect , share their story, and thrive across entities, in the digital landscape through authentic, meaningful interactions.",
   },
   values: {
     sectionTitle: "Our Values",
@@ -21,21 +21,19 @@ export const ABOUT = {
         icon: "🚀",
         title: "Sovereignty",
         description:
-          "We push boundaries and embrace cutting-edge technologies to solve real-world problems in the digital economy.",
+          "at our core we believe we have the freedom to for anything to happen, but it comes with our own achnowledfement and accountability",
       },
       {
         icon: "🤝",
         title: "Intention",
         description:
-          "We believe in the power of diverse teams and collaborative problem-solving to build stronger digital communities.",
-      },
+          "what we can do is limitless, but why we do it is the core of who we are and how we are attempting to make it happen."},
       {
         icon: "🌍",
         title: "Expression",
         description:
-          "We focus on creating meaningful connections and impact at the individual and local business level.",
+          "originality comes with an expression so pure that only you can understand it. the more you express the more others will appreciate it.",
       },
-   
     ],
   },
   team: {
@@ -43,9 +41,9 @@ export const ABOUT = {
     items: [
       {
         name: "Our Team",
-        role: "Visionaries & Builders",
+        role: "Nerds",
         description:
-          "A diverse group of passionate individuals committed to revolutionizing how businesses connect with their communities through digital innovation.",
+          "Each one of us loves something so much that they want to see more of it in the world. At Tipper we are all on different missions and visions. with Tipper as the ship that holds our  values and principles. paving the way for our dream to be achieved. ",
         image: "👥",
       },
     ],
@@ -97,12 +95,15 @@ export const ABOUT = {
       },
     ],
   },
-  cta: {
-    title: "Join Our Mission",
+  CTA: {
+    title: "Join Our ",
+    TitleSpan: "Mission",
+    TitleLineBreak: ".",
     body: "Ready to be part of the digital revolution? Whether you're a business looking to connect with your community or a passionate individual wanting to make a difference, we'd love to hear from you.",
     whatsappMessage:
       "Hi! I'm interested in learning more about Tipper Network and how we can work together.",
     whatsappButtonText: "Start a Conversation",
-    secondaryButton: "Explore Our Platform",
+    secondaryButton: "Continue exploring",
   },
+ 
 } as const;

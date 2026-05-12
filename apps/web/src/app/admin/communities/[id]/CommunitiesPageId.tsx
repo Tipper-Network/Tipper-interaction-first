@@ -32,7 +32,6 @@ import BackButton from "@/components/back_button";
 import { useCommunityDetails } from "@/views/communities/hooks/community_hooks";
 import { StatusBadge } from "@/components/status_badge";
 
-
 const AdminCommunityDetailsPage = ({ id }: { id: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();

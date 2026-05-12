@@ -4,7 +4,6 @@ import { create } from "zustand";
 import { getSessionUser } from "../api/auth_api";
 import { Role__Enum } from "@tipper/shared";
 
-
 type User = {
   email_verified: boolean;
   federated_identity_user: boolean;

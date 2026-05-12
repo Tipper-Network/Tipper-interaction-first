@@ -123,7 +123,8 @@ export default function EntityWelcomePage({ entity }: EntityWelcomePageProps) {
             {/* Welcome Text */}
             <div className="space-y-2 lg:space-y-3">
               <h1 className="text-3xl lg:text-5xl xl:text-6xl font-bold text-foreground">
-                {WELCOME_PAGE.heading} <span className="text-primary">{entity.name}</span>
+                {WELCOME_PAGE.heading}{" "}
+                <span className="text-primary">{entity.name}</span>
               </h1>
               {entity.description && (
                 <p className="text-sm lg:text-lg text-muted-foreground max-w-md lg:max-w-2xl">
